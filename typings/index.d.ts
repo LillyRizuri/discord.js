@@ -3407,9 +3407,9 @@ declare module 'discord.js' {
 
   type MessageAdditions = MessageEmbed | MessageAttachment | (MessageEmbed | MessageAttachment)[];
 
-  type MessageActionRowComponent = MessageButton;
+  type MessageActionRowComponent = MessageButton | MessageSelectMenu;
 
-  type MessageActionRowComponentOptions = MessageButtonOptions;
+  type MessageActionRowComponentOptions = MessageButtonOptions | MessageSelectMenuOptions;
 
   type MessageActionRowComponentResolvable = MessageActionRowComponent | MessageActionRowComponentOptions;
 
@@ -3441,6 +3441,7 @@ declare module 'discord.js' {
   }
 
   type MessageComponent = BaseMessageComponent | MessageActionRow | MessageButton | MessageSelectMenu;
+
   interface MessageComponentInteractionCollectorOptions extends CollectorOptions {
     max?: number;
     maxComponents?: number;
