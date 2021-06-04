@@ -4,33 +4,35 @@ const BaseMessageComponent = require('./BaseMessageComponent');
 const { MessageComponentTypes } = require('../util/Constants');
 
 /**
- * Represents an ActionRow containing message components.
+ * Represents an action row containing message components.
  * @extends {BaseMessageComponent}
  */
 class MessageActionRow extends BaseMessageComponent {
   /**
-   * Components that can be placed in a MessageActionRow
-   * * MessageButton
+   * Components that can be placed in an action row
+   * * {@link MessageButton}
+   * * {@link MessageSelectMenu}
    * @typedef {MessageButton|MessageSelectMenu} MessageActionRowComponent
    */
 
   /**
-   * Options for components that can be placed in a MessageActionRow
-   * * MessageButtonOptions
+   * Options for components that can be placed in an action row
+   * * {@link MessageButtonOptions}
+   * * {@link MessageSelectMenuOptions}
    * @typedef {MessageButtonOptions|MessageSelectMenuOptions} MessageActionRowComponentOptions
    */
 
   /**
-   * Data that can be resolved into a components that can be placed in a MessageActionRow
-   * * MessageActionRowComponent
-   * * MessageActionRowComponentOptions
+   * Data that can be resolved into components that can be placed in an action row
+   * * {@link MessageActionRowComponent}
+   * * {@link MessageActionRowComponentOptions}
    * @typedef {MessageActionRowComponent|MessageActionRowComponentOptions} MessageActionRowComponentResolvable
    */
 
   /**
    * @typedef {BaseMessageComponentOptions} MessageActionRowOptions
    * @property {MessageActionRowComponentResolvable[]} [components]
-   * The components to place in this ActionRow
+   * The components to place in this action row
    */
 
   /**
@@ -40,14 +42,14 @@ class MessageActionRow extends BaseMessageComponent {
     super({ type: 'ACTION_ROW' });
 
     /**
-     * The components in this MessageActionRow
+     * The components in this action row
      * @type {MessageActionRowComponent[]}
      */
     this.components = (data.components ?? []).map(c => BaseMessageComponent.create(c, null, true));
   }
 
   /**
-   * Adds components to the row.
+   * Adds components to the action row.
    * @param {...MessageActionRowComponentResolvable[]} components The components to add
    * @returns {MessageActionRow}
    */

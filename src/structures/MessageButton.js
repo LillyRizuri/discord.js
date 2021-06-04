@@ -6,7 +6,7 @@ const { MessageButtonStyles, MessageComponentTypes } = require('../util/Constant
 const Util = require('../util/Util');
 
 /**
- * Represents a Button message component.
+ * Represents a button message component.
  * @extends {BaseMessageComponent}
  */
 class MessageButton extends BaseMessageComponent {
@@ -119,7 +119,8 @@ class MessageButton extends BaseMessageComponent {
   }
 
   /**
-   * Sets the URL of this button. MessageButton#style should be LINK
+   * Sets the URL of this button.
+   * <note>MessageButton#style must be LINK when setting a URL</note>
    * @param {string} url The URL of this button
    * @returns {MessageButton}
    */
@@ -153,7 +154,7 @@ class MessageButton extends BaseMessageComponent {
    */
 
   /**
-   * Resolves the style of a MessageButton
+   * Resolves the style of a button
    * @param {MessageButtonStyleResolvable} style The style to resolve
    * @returns {MessageButtonStyle}
    * @private
