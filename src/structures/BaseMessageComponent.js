@@ -22,13 +22,16 @@ class BaseMessageComponent {
    */
 
   /**
-   * Components that can be sent in a message
+   * Components that can be sent in a message. This can be:
+   * * MessageActionRow
+   * * MessageButton
+   * * MessageSelectMenu
    * @typedef {MessageActionRow|MessageButton|MessageSelectMenu} MessageComponent
    */
 
   /**
    * Data that can be resolved to a MessageComponentType. This can be:
-   * * {@link MessageComponentType}
+   * * MessageComponentType
    * * string
    * * number
    * @typedef {string|number|MessageComponentType} MessageComponentTypeResolvable

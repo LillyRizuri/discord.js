@@ -10,22 +10,22 @@ const { MessageComponentTypes } = require('../util/Constants');
 class MessageActionRow extends BaseMessageComponent {
   /**
    * Components that can be placed in an action row
-   * * {@link MessageButton}
-   * * {@link MessageSelectMenu}
+   * * MessageButton
+   * * MessageSelectMenu
    * @typedef {MessageButton|MessageSelectMenu} MessageActionRowComponent
    */
 
   /**
    * Options for components that can be placed in an action row
-   * * {@link MessageButtonOptions}
-   * * {@link MessageSelectMenuOptions}
+   * * MessageButtonOptions
+   * * MessageSelectMenuOptions
    * @typedef {MessageButtonOptions|MessageSelectMenuOptions} MessageActionRowComponentOptions
    */
 
   /**
    * Data that can be resolved into components that can be placed in an action row
-   * * {@link MessageActionRowComponent}
-   * * {@link MessageActionRowComponentOptions}
+   * * MessageActionRowComponent
+   * * MessageActionRowComponentOptions
    * @typedef {MessageActionRowComponent|MessageActionRowComponentOptions} MessageActionRowComponentResolvable
    */
 
