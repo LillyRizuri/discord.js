@@ -18,6 +18,7 @@ class BaseMessageComponent {
    * Data that can be resolved into options for a MessageComponent. This can be:
    * * MessageActionRowOptions
    * * MessageButtonOptions
+   * * MessageSelectMenuOptions
    * @typedef {MessageActionRowOptions|MessageButtonOptions|MessageSelectMenuOptions} MessageComponentOptions
    */
 
