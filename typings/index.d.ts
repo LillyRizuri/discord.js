@@ -1378,7 +1378,7 @@ declare module 'discord.js' {
     public update(
       content: string | APIMessage | WebhookEditMessageOptions | MessageEmbed | MessageEmbed[],
     ): Promise<Message | RawMessage>;
-    public update(content: string, options?: WebhookEditMessageOptions): Promise<Message | RawMessage>;
+    public update(content: string, options?: WebhookEditMessageOptions): Promise<void>;
     public static resolveType(type: MessageComponentTypeResolvable): MessageComponentType;
   }
 
