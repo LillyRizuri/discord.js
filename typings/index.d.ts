@@ -317,6 +317,10 @@ declare module 'discord.js' {
     public static resolve(bit?: BitFieldResolvable<any, number | bigint>): number | bigint;
   }
 
+  export class ButtonInteraction extends MessageComponentInteraction {
+    public componentType: 'BUTTON';
+  }
+
   export class CategoryChannel extends GuildChannel {
     public readonly children: Collection<Snowflake, GuildChannel>;
     public type: 'category';
@@ -1136,8 +1140,10 @@ declare module 'discord.js' {
     public type: InteractionType;
     public user: User;
     public version: number;
+    public isButton(): this is ButtonInteraction;
     public isCommand(): this is CommandInteraction;
     public isMessageComponent(): this is MessageComponentInteraction;
+    public isSelectMenu(): this is SelectMenuInteraction;
   }
 
   export class InteractionWebhook extends PartialWebhookMixin() {
@@ -1359,7 +1365,6 @@ declare module 'discord.js' {
     public deferred: boolean;
     public message: Message | RawMessage;
     public replied: boolean;
-    public values: string[] | null;
     public webhook: InteractionWebhook;
     public defer(options?: InteractionDeferOptions): Promise<void>;
     public deferUpdate(): Promise<void>;
@@ -1697,6 +1702,11 @@ declare module 'discord.js' {
     public toString(): string;
 
     public static comparePositions(role1: Role, role2: Role): number;
+  }
+
+  export class SelectMenuInteraction extends MessageComponentInteraction {
+    public componentType: 'SELECT_MENU';
+    public values: string[] | null;
   }
 
   export class Shard extends EventEmitter {
