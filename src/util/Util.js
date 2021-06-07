@@ -279,6 +279,7 @@ class Util {
       return emoji.length ? (/^\d{17,19}$/.test(emoji) ? { id: emoji } : Util.parseEmoji(emoji)) : null;
     }
     const { id, name, animated } = emoji;
+    if (!id && !name) return null;
     return { id, name, animated };
   }
 
