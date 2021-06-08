@@ -81,8 +81,7 @@ class APIMessage {
    */
   get isInteraction() {
     const Interaction = require('./Interaction');
-    const InteractionWebhook = require('./InteractionWebhook');
-    return this.target instanceof Interaction || this.target instanceof InteractionWebhook;
+    return this.target instanceof Interaction;
   }
 
   /**
@@ -153,10 +152,7 @@ class APIMessage {
     }
     const embeds = embedLikes.map(e => new MessageEmbed(e).toJSON());
 
-    const components = [
-      ...this.options.components?.filter(c => Object.is(c))?.map(c => BaseMessageComponent.create(c).toJSON()),
-      ...this.options.components?.filter(c => c instanceof BaseMessageComponent)?.map(c => c.toJSON()),
-    ]
+    const components = this.options.components?.map(c => c instanceof BaseMessageComponent ? c?.toJSON() : BaseMessageComponent.create(c).toJSON());
 
     let username;
     let avatarURL;
@@ -376,15 +372,10 @@ class APIMessage {
    */
   static create(target, content, options, extra = {}) {
     const Interaction = require('./Interaction');
-    const InteractionWebhook = require('./InteractionWebhook');
     const Webhook = require('./Webhook');
     const WebhookClient = require('../client/WebhookClient');
 
-    const isWebhook =
-      target instanceof Interaction ||
-      target instanceof InteractionWebhook ||
-      target instanceof Webhook ||
-      target instanceof WebhookClient;
+    const isWebhook = target instanceof Interaction || target instanceof Webhook || target instanceof WebhookClient;
     const transformed = this.transformOptions(content, options, extra, isWebhook);
     return new this(target, transformed);
   }
@@ -394,7 +385,7 @@ module.exports = APIMessage;
 
 /**
  * A target for a message.
- * @typedef {TextChannel|DMChannel|User|GuildMember|Webhook|WebhookClient|Interaction|InteractionWebhook} MessageTarget
+ * @typedef {TextChannel|DMChannel|User|GuildMember|Webhook|WebhookClient|Interaction} MessageTarget
  */
 
 /**
