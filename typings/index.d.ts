@@ -1226,9 +1226,11 @@ declare module 'discord.js' {
     public tts: boolean;
     public type: MessageType;
     public readonly url: string;
+    public isWebhook: boolean;
     public webhookID: Snowflake | null;
     public flags: Readonly<MessageFlags>;
     public reference: MessageReference | null;
+    public referencedMessage: Message | null;
     public awaitMessageComponentInteractions(
       filter: CollectorFilter<[MessageComponentInteraction]>,
       options?: AwaitMessageComponentInteractionsOptions,
@@ -1261,20 +1263,18 @@ declare module 'discord.js' {
     public pin(): Promise<Message>;
     public react(emoji: EmojiIdentifierResolvable): Promise<MessageReaction>;
     public removeAttachments(): Promise<Message>;
-    public reply(
-      content: string | null | (ReplyMessageOptions & { split?: false }) | MessageAdditions,
-    ): Promise<Message>;
-    public reply(options: ReplyMessageOptions & { split: true | SplitOptions }): Promise<Message[]>;
-    public reply(options: ReplyMessageOptions | APIMessage): Promise<Message | Message[]>;
-    public reply(
-      content: string | null,
-      options: (ReplyMessageOptions & { split?: false }) | MessageAdditions,
-    ): Promise<Message>;
-    public reply(
-      content: string | null,
-      options: ReplyMessageOptions & { split: true | SplitOptions },
-    ): Promise<Message[]>;
-    public reply(content: string | null, options: ReplyMessageOptions): Promise<Message | Message[]>;
+    public reply(content: string | (MessageOptions & { split?: false }) | MessageAdditions): Promise<Message>;
+    public reply(options: MessageOptions & { split: true | SplitOptions }): Promise<Message[]>;
+    public reply(options: MessageOptions | APIMessage): Promise<Message | Message[]>;
+    public reply(content: string | null, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<Message>;
+    public reply(content: string | null, options: MessageOptions & { split: true | SplitOptions }): Promise<Message[]>;
+    public reply(content: string | null, options: MessageOptions): Promise<Message | Message[]>;
+    public re(content: string | (MessageOptions & { split?: false }) | MessageAdditions): Promise<Message>;
+    public re(options: MessageOptions & { split: true | SplitOptions }): Promise<Message[]>;
+    public re(options: MessageOptions | APIMessage): Promise<Message | Message[]>;
+    public re(content: string | null, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<Message>;
+    public re(content: string | null, options: MessageOptions & { split: true | SplitOptions }): Promise<Message[]>;
+    public re(content: string | null, options: MessageOptions): Promise<Message | Message[]>;
     public suppressEmbeds(suppress?: boolean): Promise<Message>;
     public toJSON(): unknown;
     public toString(): string;
