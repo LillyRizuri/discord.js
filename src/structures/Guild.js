@@ -873,6 +873,7 @@ class Guild extends BaseGuild {
     if (data.splash) _data.splash = data.splash;
     if (data.discoverySplash) _data.discovery_splash = data.discoverySplash;
     if (data.banner) _data.banner = data.banner;
+    if (data.nsfwLevel) _data.nsfww_level = data.nsfwLevel;
     if (typeof data.explicitContentFilter !== 'undefined') {
       _data.explicit_content_filter =
         typeof data.explicitContentFilter === 'number'
