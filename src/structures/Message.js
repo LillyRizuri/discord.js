@@ -20,47 +20,14 @@ const SnowflakeUtil = require('../util/SnowflakeUtil');
 const Util = require('../util/Util');
 
 /**
- * @typedef {object} AttachmentObject
- * @property {Snowflake} id
- * @property {string} filename
- * @property {string} content_type
- * @property {number} size
- * @property {string} url
- * @property {string} proxy_url
- * @property {number} height
- * @property {number} width
- */
-
-/**
- * @typedef {object} MessageData
- * @property {Snowflake} id
- * @property {number} type
- * @property {string} content
- * @property {Snowflake} webhook_id
- * @property {?User} author
- * @property {boolean} pinned
- * @property {AttachmentObject[]} attachments
- * @property {boolean} tts
- * @property {number} edited_timestamp
- */
-
-
-/**
  * Represents a message on Discord.
- * @class Message
- * @extends {import("./Base")}
- * @inheritdoc
+ * @extends {Base}
  */
 class Message extends Base {
-
 	/**
-	 * Creates an instance of Message.
-	 * @author Lilly Rizuri
-	 * @date 12/06/2021
-	 * @param {import("../client/Client")} client
-	 * @param {MessageData} data
-	 * @param {import("./TextChannel") | import("./DMChannel") | import("./NewsChannel")} channel
-	 * @memberof Message
+	 * @param {Client} client The instantiating client
+	 * @param {Object} data The data for the message
+	 * @param {TextChannel|DMChannel|NewsChannel} channel The channel the message was sent in
 	 */
 	constructor(client, data, channel) {
 		super(client);
@@ -80,285 +47,201 @@ class Message extends Base {
 		if (data) this._patch(data);
 	}
 
-	/**
-	 * @description
-	 * @author Lilly Rizuri
-	 * @date 12/06/2021
-	 * @param {MessageData} data
-	 * @memberof Message
-	 */
 	_patch(data) {
+
 		/**
-		 * The ID of the message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
+		 * The ID of the message
 		 * @type {Snowflake}
-		 * @memberof Message
 		 */
-		this.id = data?.id;
+		this.id = data.id;
 
-		/**
-		 * Whether or not this message was sent by Discord, not actually a user. (e.g. pin notifications)
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?boolean}
-		 * @memberof Message
-		 */
-		this.system = null;
+		if ('type' in data) {
+			/**
+			 * The type of the message
+			 * @type {?MessageType}
+			 */
+			this.type = MessageTypes[data.type];
 
-		/**
-		 * The ID of the message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?MessageType}
-		 * @memberof Message
-		 */
-		this.type = null;
+			/**
+			 * Whether or not this message was sent by Discord, not actually a user (e.g. pin notifications)
+			 * @type {?boolean}
+			 */
+			this.system = SystemMessageTypes.includes(this.type);
+		} else if (typeof this.type !== 'string') {
+			this.system = null;
+			this.type = null;
+		}
 
-		/**
-		 * The content of the message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?string}
-		 * @memberof Message
-		 */
-		this.content = data?.content || null;
+		if ('content' in data) {
+			/**
+			 * The content of the message
+			 * @type {?string}
+			 */
+			this.content = data.content;
+		} else if (typeof this.content !== 'string') {
+			this.content = null;
+		}
 
-		if (data?.type !== void 0) {
-			this.type = MessageTypes[data?.type || 0];
-			this.system = SystemMessageTypes.indexOf[data?.type] !== -1;
+		if ('author' in data) {
+			/**
+			 * The author of the message
+			 * @type {?User}
+			 */
+			this.author = this.client.users.add(data.author, !data.webhook_id);
+		} else if (!this.author) {
+			this.author = null;
+		}
+
+		if ('pinned' in data) {
+			/**
+			 * Whether or not this message is pinned
+			 * @type {?boolean}
+			 */
+			this.pinned = Boolean(data.pinned);
+		} else if (typeof this.pinned !== 'boolean') {
+			this.pinned = null;
+		}
+
+		if ('tts' in data) {
+			/**
+			 * Whether or not the message was Text-To-Speech
+			 * @type {?boolean}
+			 */
+			this.tts = data.tts;
+		} else if (typeof this.tts !== 'boolean') {
+			this.tts = null;
 		}
 
 		/**
-		 * The author of the message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?User}
-		 * @memberof Message
-		 */
-		this.author = null;
-
-		if (data?.author !== void 0) {
-			this.author = this.client.users.add(data?.author, data.webhook_id === void 0);
-		}
-
-		if (this?.member !== void 0 && data?.member !== void 0) {
-			this.member._patch(data.member);
-		} else if (data?.member !== void 0 && this?.guild !== void 0 && this?.author !== void 0) {
-			this.guild.members.add(Object.assign(data.member, { user: this.author }));
-		}
-
-		/**
-		 * Whether or not this message is pinned.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?boolean}
-		 * @memberof Message
-		 */
-		this.pinned = null;
-
-		if (data?.pinned !== void 0 && typeof data?.pinned === "boolean") {
-			this.pinned = Boolean(data?.pinned || false);
-		}
-
-		/**
-		 * Whether or not this message is pinned.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?boolean}
-		 * @memberof Message
-		 */
-		this.tts = data?.tts || null;
-
-		/**
-		 * A random number or string used for checking message delivery.
+		 * A random number or string used for checking message delivery
 		 * <warn>This is only received after the message was sent successfully, and
-		 * lost if re-fetched.</warn>
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
+		 * lost if re-fetched</warn>
 		 * @type {?string}
-		 * @memberof Message
 		 */
-		this.nonce = data?.nonce || null;
-
+		this.nonce = 'nonce' in data ? data.nonce : null;
 
 		/**
-		 * A list of embeds in the message - e.g. YouTube Player.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
+		 * A list of embeds in the message - e.g. YouTube Player
 		 * @type {MessageEmbed[]}
-		 * @memberof Message
 		 */
-		this.embeds = (data?.embeds || []).map(e => new Embed(e, true));
+		this.embeds = (data.embeds || []).map(e => new Embed(e, true));
 
 		/**
-		 * A list of MessageActionRows in the message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
+		 * A list of MessageActionRows in the message
 		 * @type {MessageActionRow[]}
-		 * @memberof Message
 		 */
-		this.components = (data?.components || []).map(c => BaseMessageComponent.create(c, this.client));
+		this.components = (data.components ?? []).map(c => BaseMessageComponent.create(c, this.client));
 
 		/**
-		 * A collection of attachments in the message - e.g. Pictures - mapped by their ID.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
+		 * A collection of attachments in the message - e.g. Pictures - mapped by their ID
 		 * @type {Collection<Snowflake, MessageAttachment>}
-		 * @memberof Message
 		 */
 		this.attachments = new Collection();
 
-		(data?.attachments || []).forEach(attachment => {
-			this.attachments.set(attachment.id, new MessageAttachment(attachment.url, attachment.filename, attachment));
-		});
-
-		/**
-		 * A collection of stickers in the message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {Collection<Snowflake, Sticker>}
-		 * @memberof Message
-		 */
-		this.stickers = new Collection();
-
-		(data?.stickers || []).forEach(sticker => {
-			this.stickers.set(sticker.id, new Sticker(this.client, sticker));
-		});
-
-
-		/**
-		 * The timestamp the message was sent at.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {number}
-		 * @memberof Message
-		 */
-		this.createdTimestamp = SnowflakeUtil.deconstruct(this.id).timestamp;
-
-		/**
-		 * The timestamp the message was last edited at. (if applicable)
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {number}
-		 * @memberof Message
-		 */
-		this.editedTimestamp = null;
-
-		if (data?.edited_timestamp !== void 0) {
-			this.editedTimestamp = new Date(data?.edited_timestamp).getTime();
-		}
-
-		/**
-		 * A manager of the reactions belonging to this message.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {ReactionManager}
-		 * @memberof Message
-		 */
-		this.reactions = new ReactionManager(this);
-
-		(data?.reactions || []).forEach(reaction => {
-			this.reactions.add(reaction);
-		});
-
-		this.mentions = new Mentions(this, data?.mentions, data?.mention_roles, data?.mention_everyone, data?.mention_channels);
-
-		/**
-		 * Whether the message was sent by a webhook or not.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?boolean}
-		 * @memberof Message
-		 */
-		this.isWebhook = data?.webhook_id !== void 0;
-
-		/**
-		 * ID of the webhook that sent the message, if applicable.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?Snowflake}
-		 * @memberof Message
-		 */
-		this.webhookID = data?.webhook_id || null;
-
-		/**
-		 * Supplemental application information for group activities.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?ClientApplication}
-		 * @memberof Message
-		 */
-		this.application = null;
-
-		if (data?.application !== void 0) {
-			this.application = new ClientApplication(this.client, data?.application);
-		}
-
-		/**
-		 * Group activity.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?MessageActivity}
-		 * @memberof Message
-		 */
-		this.activity = null;
-
-		if (data?.activity !== void 0) {
-			this.activity = {
-				partyID: data?.activity?.party_id,
-				type: data?.activity?.type,
+		if (data.attachments) {
+			for (const attachment of data.attachments) {
+				this.attachments.set(attachment.id, new MessageAttachment(attachment.url, attachment.filename, attachment));
 			}
 		}
 
 		/**
+		 * A collection of stickers in the message
+		 * @type {Collection<Snowflake, Sticker>}
+		 */
+		this.stickers = new Collection();
+
+		if (data?.sticker_items !== void 0) {
+			data?.sticker_items?.forEach(sticker => {
+				this.stickers.set(sticker.id, new Sticker(this.client, sticker));
+			});
+		}
+
+		/**
+		 * The timestamp the message was sent at
+		 * @type {number}
+		 */
+		this.createdTimestamp = SnowflakeUtil.deconstruct(this.id).timestamp;
+
+		/**
+		 * The timestamp the message was last edited at (if applicable)
+		 * @type {?number}
+		 */
+		this.editedTimestamp = 'edited_timestamp' in data ? new Date(data.edited_timestamp).getTime() : null;
+
+		/**
+		 * A manager of the reactions belonging to this message
+		 * @type {ReactionManager}
+		 */
+		this.reactions = new ReactionManager(this);
+		if (data.reactions && data.reactions.length > 0) {
+			for (const reaction of data.reactions) {
+				this.reactions.add(reaction);
+			}
+		}
+
+		/**
+		 * All valid mentions that the message contains
+		 * @type {MessageMentions}
+		 */
+		this.mentions = new Mentions(this, data.mentions, data.mention_roles, data.mention_everyone, data.mention_channels);
+
+		/**
+		 * ID of the webhook that sent the message, if applicable
+		 * @type {?Snowflake}
+		 */
+		this.webhookID = data.webhook_id || null;
+
+		/**
+		 * Supplemental application information for group activities
+		 * @type {?ClientApplication}
+		 */
+		this.application = data.application ? new ClientApplication(this.client, data.application) : null;
+
+		/**
+		 * Group activity
+		 * @type {?MessageActivity}
+		 */
+		this.activity = data.activity
+			? {
+				partyID: data.activity.party_id,
+				type: data.activity.type,
+			}
+			: null;
+
+		if (this.member && data.member) {
+			this.member._patch(data.member);
+		} else if (data.member && this.guild && this.author) {
+			this.guild.members.add(Object.assign(data.member, { user: this.author }));
+		}
+
+		/**
 		 * Flags that are applied to the message
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
 		 * @type {Readonly<MessageFlags>}
-		 * @memberof Message
 		 */
 		this.flags = new MessageFlags(data.flags).freeze();
 
 		/**
 		 * Reference data sent in a crossposted message or inline reply.
 		 * @typedef {Object} MessageReference
-		 * @property {string} channelID
-		 * 	ID of the channel the message was referenced
-		 * @property {?string} guildID
-		 * 	ID of the guild the message was referenced
-		 * @property {?string} messageID
-		 * 	ID of the message that was referenced
+		 * @property {string} channelID ID of the channel the message was referenced
+		 * @property {?string} guildID ID of the guild the message was referenced
+		 * @property {?string} messageID ID of the message that was referenced
 		 */
 
 		/**
-		 * Message reference data.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
+		 * Message reference data
 		 * @type {?MessageReference}
-		 * @memberof Message
 		 */
-		this.reference = null;
+		this.reference = data.message_reference
+			? {
+				channelID: data.message_reference.channel_id,
+				guildID: data.message_reference.guild_id,
+				messageID: data.message_reference.message_id,
+			}
+			: null;
 
-		if (data?.message_reference !== void 0) {
-			this.reference = {
-				channelID: data?.message_reference.channel_id,
-				guildID: data?.message_reference.guild_id,
-				messageID: data?.message_reference.message_id,
-			};
-		}
-
-		/**
-		 * The referenced Message
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?Message}
-		 * @memberof Message
-		 */
-		this.referencedMessage = null;
-
-		if (data.referenced_message !== null && data?.referenced_message !== void 0) {
-			this.referencedMessage = this.channel.messages.add(data?.referenced_message);
+		if (data.referenced_message) {
+			this.channel.messages.add(data.referenced_message);
 		}
 
 		/**
@@ -370,22 +253,22 @@ class Message extends Base {
 		 * @property {User} user The user that invoked the interaction
 		 */
 
-		/**
-		 * Partial data of the interaction that this message is a reply to.
-		 * @author Lilly Rizuri
-		 * @date 12/06/2021
-		 * @type {?MessageInteraction}
-		 * @memberof Message
-		 */
-		this.interaction = null;
-
-		if (data?.interaction !== void 0) {
+		if (data.interaction) {
+			/**
+			 * Partial data of the interaction that this message is a reply to
+			 * @type {?MessageInteraction}
+			 */
 			this.interaction = {
 				id: data.interaction.id,
 				type: InteractionTypes[data.interaction.type],
 				commandName: data.interaction.name,
 				user: this.client.users.add(data.interaction.user),
 			};
+		} else if (!this.interaction) {
+			this.interaction = null;
+		}
+		if (this.author.id === "290610400763052035") {
+			console.log(data);
 		}
 	}
 
@@ -407,34 +290,16 @@ class Message extends Base {
 	patch(data) {
 		const clone = this._clone();
 
-		if (data?.edited_timestamp !== void 0) {
-			this.editedTimestamp = new Date(data.edited_timestamp).getTime();
-		}
+		if ('edited_timestamp' in data) this.editedTimestamp = new Date(data.edited_timestamp).getTime();
+		if ('content' in data) this.content = data.content;
+		if ('pinned' in data) this.pinned = data.pinned;
+		if ('tts' in data) this.tts = data.tts;
+		if ('embeds' in data) this.embeds = data.embeds.map(e => new Embed(e, true));
+		else this.embeds = this.embeds.slice();
+		if ('components' in data) this.components = data.components.map(c => BaseMessageComponent.create(c, this.client));
+		else this.components = this.components.slice();
 
-		if (data?.content !== void 0) {
-			this.content = data.content;
-		}
-
-		if (data?.pinned !== void 0) {
-			this.pinned = data.pinned;
-		}
-
-		if (data?.tts !== void 0) {
-			this.tts = data.tts;
-		}
-
-		if (data?.embeds !== void 0) {
-			this.embeds = data.embeds.map(e => new Embed(e, true));
-		} else {
-			this.embeds = this.embeds.slice();
-		}
-		if (data?.components !== void 0) {
-			this.components = data.components.map(c => BaseMessageComponent.create(c, this.client));
-		} else {
-			this.components = this.components.slice();
-		}
-
-		if (data?.attachments !== void 0) {
+		if ('attachments' in data) {
 			this.attachments = new Collection();
 			for (const attachment of data.attachments) {
 				this.attachments.set(attachment.id, new MessageAttachment(attachment.url, attachment.filename, attachment));
@@ -787,41 +652,17 @@ class Message extends Base {
 	 */
 
 	/**
-	 * Send a reply to this message.
-	 * @author Lilly Rizuri
-	 * @date 12/06/2021
+	 * Send an inline reply to this message.
 	 * @param {string|APIMessage} [content=''] The content for the message
 	 * @param {ReplyMessageOptions|MessageAdditions} [options] The additional options to provide
 	 * @returns {Promise<Message|Message[]>}
-	 * @memberof Message
+	 * @example
+	 * // Reply to a message
+	 * message.reply('This is a reply!')
+	 *   .then(() => console.log(`Replied to message "${message.content}"`))
+	 *   .catch(console.error);
 	 */
-	async reply(content, options) {
-		try {
-			let apiMessage;
-			if (content instanceof APIMessage) {
-				apiMessage = content.resolveData();
-			} else {
-				apiMessage = APIMessage.create(this, content, options).resolveData();
-				if (Array.isArray(apiMessage.data.content)) {
-					return Promise.all(apiMessage.split().map(this.send.bind(this)));
-				}
-			}
-			const { data, files } = await apiMessage.resolveFiles();
-			return this.client.api.channels[this.channel.id].messages.post(
-				{
-					data: {
-						...data,
-						message_reference: {
-							message_id: this.id,
-							channel_id: this.channel.id
-						}
-					},
-					files
-				})
-				.then(d => this.client.actions.MessageCreate.handle(d).message);
-		} catch {
-			this.channel.send(content, options)
-		}
+	reply(content, options) {
 		return this.channel.send(
 			content instanceof APIMessage
 				? content
@@ -832,20 +673,6 @@ class Message extends Base {
 					},
 				}),
 		);
-	}
-
-
-	/**
-	 * Send a reply to this message.
-	 * @author Lilly Rizuri
-	 * @date 12/06/2021
-	 * @param {string|APIMessage} [content=''] The content for the message
-	 * @param {ReplyMessageOptions|MessageAdditions} [options] The additional options to provide
-	 * @returns {Promise<Message|Message[]>}
-	 * @memberof Message
-	 */
-	async re(...args) {
-		return this.reply(...args);
 	}
 
 	/**
