@@ -267,9 +267,6 @@ class Message extends Base {
 		} else if (!this.interaction) {
 			this.interaction = null;
 		}
-		if (this.author.id === "290610400763052035") {
-			console.log(data);
-		}
 	}
 
 	/**
