@@ -33,10 +33,10 @@ class MessageComponentInteraction extends Interaction {
     this.componentType = MessageComponentInteraction.resolveType(data.data.component_type);
 
     /**
-     * The value of the invoked application command
-     * @type {any}
+     * The values of the invoked application command
+     * @type {any[]}
      */
-    this.value = data.data?.value || null;
+    this.values = data.data?.values || null;
 
     /**
      * Whether the reply to this interaction has been deferred
