@@ -1,8 +1,8 @@
 'use strict';
 
 const BaseMessageComponent = require('./BaseMessageComponent');
+const { MessageComponentTypes } = require('../util/Constants');
 const { RangeError } = require('../errors');
-const { MessageButtonStyles, MessageComponentTypes } = require('../util/Constants');
 const Util = require('../util/Util');
 
 /**
@@ -30,7 +30,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	 */
 
 	/**
-	 * @param {MessageSelectMenu|MessageSelectMenuOptions} [data={}] MessageButton to clone or raw data
+	 * @param {MessageSelectMenu|MessageSelectMenuOptions} [data={}] MessageSelectMenu to clone or raw data
 	 */
 	constructor(data = {}) {
 		super({ type: 'SELECT_MENU' });
@@ -79,7 +79,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Sets the custom ID of this button
 	 * @param {string} customID A unique string to be sent in the interaction when clicked
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	addOption(label, value, description, emoji, isDefault) {
 		this.addOptions({label, value, description, emoji, isDefault});
@@ -89,7 +89,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Adds options to the menu.
 	 * @param {MessageSelectMenuOptions[]} options
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	addOptions(options) {
 		this.options.push(...this.constructor.normalizeOptions(options));
@@ -99,7 +99,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Sets the custom ID of this button
 	 * @param {string} customID A unique string to be sent in the interaction when clicked
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	setCustomID(customID) {
 		this.customID = Util.verifyString(customID, RangeError, 'BUTTON_CUSTOM_ID');
@@ -109,7 +109,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Sets the interactive status of the button
 	 * @param {boolean} disabled Whether this button should be disabled
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	setDisabled(disabled) {
 		this.disabled = disabled;
@@ -119,7 +119,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Sets the minimum number of items that must be chosen.
 	 * @param {number} min
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	setMin(disabled) {
 		this.minValues = parseInt(min);
@@ -129,7 +129,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Sets the maximum number of items that can be chosen.
 	 * @param {number} max
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	setMax(max) {
 		this.maxValues = parseInt(max);
@@ -139,7 +139,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	/**
 	 * Sets the placeholder text for the menu.
 	 * @param {string} placeholder The text to be displayed on this button
-	 * @returns {MessageButton}
+	 * @returns {MessageSelectMenu}
 	 */
 	setPlaceholder(placeholder) {
 		this.placeholder = Util.verifyString(placeholder, RangeError, "MENU_PLACEHOLDER");
@@ -152,6 +152,7 @@ class MessageSelectMenu extends BaseMessageComponent {
 	 */
 	toJSON() {
 		return {
+			type: MessageComponentTypes[this.type],
 			custom_id: this.customID,
 			disabled: this.disabled,
 			options: this.options,
