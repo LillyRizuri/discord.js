@@ -1379,6 +1379,7 @@ declare module 'discord.js' {
     public deferred: boolean;
     public message: Message | RawMessage;
     public replied: boolean;
+    public values: any[];
     public webhook: InteractionWebhook;
     public defer(options?: InteractionDeferOptions): Promise<void>;
     public deferUpdate(): Promise<void>;
