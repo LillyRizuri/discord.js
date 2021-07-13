@@ -34,11 +34,6 @@ class CommandInteraction extends Interaction {
      */
     this.commandName = data.data.name;
 
-    /**
-     * The value of the invoked application command
-     * @type {any}
-     */
-    this.commandValue = data.data?.value || null;
 
     /**
      * Whether the reply to this interaction has been deferred
