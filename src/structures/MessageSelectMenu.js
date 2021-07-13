@@ -81,8 +81,8 @@ class MessageSelectMenu extends BaseMessageComponent {
 	 * @param {string} customID A unique string to be sent in the interaction when clicked
 	 * @returns {MessageButton}
 	 */
-	addOption(label, value, description, emoji, isDefault = false) {
-		this.addOptions({label, value, description, emoji, isDefault = false});
+	addOption(label, value, description, emoji, isDefault) {
+		this.addOptions({label, value, description, emoji, isDefault});
 		return this;
 	}
 
@@ -171,13 +171,13 @@ class MessageSelectMenu extends BaseMessageComponent {
 	 * @param {?boolean} [isDefault=false] Set the option to default.
 	 * @returns {MenuOptionData}
 	 */
-	static normalizeOption(label, value, description, emoji, isDefault = false) {
+	static normalizeOption(label, value, description, emoji, isDefault) {
 		return {
 			label: Util.verifyString(label, RangeError, 'MENU_OPTION_LABEL', false),
 			value: Util.verifyString(value, RangeError, 'MENU_OPTION_VALUE', false),
 			description,
 			emoji,
-			"default": isDefault,
+			"default": isDefault ?? false,
 		};
 	}
 
