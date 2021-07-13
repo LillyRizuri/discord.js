@@ -43,7 +43,7 @@ class BaseMessageComponent {
 		 * @type {?MessageComponentType}
 		 */
 		this.type = 'type' in data ? BaseMessageComponent.resolveType(data.type) : null;
-	}
+	} 
 
 	/**
 	 * Constructs a MessageComponent based on the type of the incoming data
