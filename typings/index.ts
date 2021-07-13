@@ -48,6 +48,7 @@ client.on('message', ({ channel }) => {
   channel.send();
   // @ts-expect-error
   channel.send({ another: 'property' });
+
 });
 
 client.login('absolutely-valid-token');

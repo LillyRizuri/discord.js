@@ -51,6 +51,7 @@ declare enum MessageButtonStyles {
 declare enum MessageComponentTypes {
   ACTION_ROW = 1,
   BUTTON = 2,
+  SELECT_MENU = 3,
 }
 
 declare enum NSFWLevels {
@@ -1312,6 +1313,27 @@ declare module 'discord.js' {
     public setFile(attachment: BufferResolvable | Stream, name?: string): this;
     public setName(name: string): this;
     public toJSON(): unknown;
+  }
+
+  export class MessageSelectMenu extends BaseMessageComponent {
+    constructor(data?: MessageSelectMenu | MessageSelectMenuOptions);
+    public customID: string | null;
+    public disabled: boolean;
+    public placeholder: string | null;
+    public minValues: number | null;
+    public maxValues: number | null;
+    public type: 'SELECT_MENU';
+    public options: SelectMenuOption[] | null;
+    public setCustomID(customID: string): this;
+    public setDisabled(disabled: boolean): this;
+    public setMin(min: number): this;
+    public setMax(max: number): this;
+    public setPlaceholder(placeholder: string): this;
+	public addOption(label: string, value: string, description?: string, emoji?: Emoji, isDefault?: boolean): this;
+	public addOptions(...options: SelectMenuOption[] | SelectMenuOption[][]): this;
+    public toJSON(): unknown
+    public static normalizeOption(label: string, value: string, description?: string, emoji?: Emoji, isDefault?: boolean): Required<SelectMenuOption>;
+    public static normalizeOptions(...options: SelectMenuOption[] | SelectMenuOption[][]): Required<SelectMenuOption>[];
   }
 
   export class MessageButton extends BaseMessageComponent {
@@ -2978,6 +3000,14 @@ declare module 'discord.js' {
     inline: boolean;
   }
 
+  interface SelectMenuOption {
+    label: string;
+    value: string;
+    description: string;
+    emoji: Emoji;
+    default: boolean;
+  }
+
   interface EmbedFieldData {
     name: string;
     value: string;
@@ -3391,7 +3421,7 @@ declare module 'discord.js' {
 
   type MessageActionRowComponentOptions = MessageButtonOptions;
 
-  type MessageActionRowComponentResolvable = MessageActionRowComponent | MessageActionRowComponentOptions;
+  type MessageActionRowComponentResolvable = MessageButton | MessageActionRowComponentOptions;
 
   interface MessageActionRowOptions extends BaseMessageComponentOptions {
     components?: MessageActionRowComponentResolvable[];
@@ -3409,6 +3439,14 @@ declare module 'discord.js' {
     label?: string;
     style: MessageButtonStyleResolvable;
     url?: string;
+  }
+
+  interface MessageSelectMenuOptions extends BaseMessageComponentOptions {
+    customID?: string;
+    disabled?: boolean;
+    options?: SelectMenuOption[];
+    maxValues?: number;
+    minValues: number;
   }
 
   type MessageButtonStyle = keyof typeof MessageButtonStyles;

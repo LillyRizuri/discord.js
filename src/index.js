@@ -97,6 +97,7 @@ module.exports = {
   MessageActionRow: require('./structures/MessageActionRow'),
   MessageAttachment: require('./structures/MessageAttachment'),
   MessageButton: require('./structures/MessageButton'),
+  MessageSelectMenu: require('./structures/MessageSelectMenu'),
   MessageCollector: require('./structures/MessageCollector'),
   MessageComponentInteraction: require('./structures/MessageComponentInteraction'),
   MessageComponentInteractionCollector: require('./structures/MessageComponentInteractionCollector'),

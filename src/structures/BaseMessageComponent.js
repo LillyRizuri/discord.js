@@ -65,6 +65,11 @@ class BaseMessageComponent {
         component = new MessageActionRow(data);
         break;
       }
+      case MessageComponentTypes.SELECT_MENU: {
+        const MessageSelectMenu = require('./MessageSelectMenu');
+        component = new MessageSelectMenu(data);
+        break;
+      }
       case MessageComponentTypes.BUTTON: {
         const MessageButton = require('./MessageButton');
         component = new MessageButton(data);
