@@ -21,12 +21,13 @@ class Channel extends Base {
      * * `voice` - a guild voice channel
      * * `category` - a guild category channel
      * * `news` - a guild news channel
-     * * `store` - a guild store channel
+	 * * `store` - a guild store channel
+	 * * `thread` - a thread channel
      * * `stage` - a guild stage channel
      * * `unknown` - a generic channel of unknown type, could be Channel or GuildChannel
      * @type {string}
      */
-    this.type = type ? type.toLowerCase() : 'unknown';
+    this.type = type ? type.toLowerCase() : "unknown";
 
     /**
      * Whether the channel has been deleted

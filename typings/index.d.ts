@@ -7,6 +7,7 @@ declare enum ChannelType {
   news = 5,
   store = 6,
   unknown = 7,
+  thread = 11,
   stage = 13,
 }
 
@@ -18,6 +19,7 @@ declare enum ChannelTypes {
   CATEGORY = 4,
   NEWS = 5,
   STORE = 6,
+  thread = 11,
   STAGE = 13,
 }
 
@@ -345,6 +347,7 @@ declare module 'discord.js' {
 
     public application: ClientApplication | null;
     public channels: ChannelManager;
+    public threads: ThreadManager;
     public readonly emojis: BaseGuildEmojiManager;
     public guilds: GuildManager;
     public options: ClientOptions;
@@ -779,6 +782,7 @@ declare module 'discord.js' {
     public banner: string | null;
     public bans: GuildBanManager;
     public channels: GuildChannelManager;
+    public threads: GuildThreadManager;
     public commands: GuildApplicationCommandManager;
     public defaultMessageNotifications: DefaultMessageNotifications | number;
     public deleted: boolean;
@@ -1535,6 +1539,20 @@ declare module 'discord.js' {
     public remove(): Promise<MessageReaction>;
     public fetch(): Promise<MessageReaction>;
     public toJSON(): unknown;
+  }
+
+  export class Thread extends TextBasedChannel(GuildChannel) {
+    constructor(guild: Guild, data?: unknown);
+    public messages: MessageManager;
+    public ownerID: Snowflake | null;
+    public owner: User | null;
+    public messageCount: number | null;
+    public memberCount: number | null;
+    public archived: boolean;
+    public locked: boolean;
+    public archiveTimestamp: number | null;
+    public autoArchiveDuration: 60 | 1440 | 4320 | 10080;
+    public type: 'thread';
   }
 
   export class NewsChannel extends TextBasedChannel(GuildChannel) {
@@ -2322,6 +2340,10 @@ declare module 'discord.js' {
     public fetch(id: Snowflake, cache?: boolean, force?: boolean): Promise<Channel | null>;
   }
 
+  export class ThreadManager extends BaseManager<Snowflake, Thread, ThreadResolvable> {
+    constructor(client: Client, iterable?: Iterable<any>);
+  }
+
   export class GuildApplicationCommandManager extends ApplicationCommandManager {
     constructor(guild: Guild, iterable?: Iterable<any>);
     public guild: Guild;
@@ -2350,6 +2372,11 @@ declare module 'discord.js' {
       name: string,
       options: GuildCreateChannelOptions,
     ): Promise<TextChannel | VoiceChannel | CategoryChannel | NewsChannel | StoreChannel | StageChannel>;
+  }
+
+  export class GuildThreadManager extends BaseManager<Snowflake, Thread, ThreadResolvable> {
+    constructor(guild: Guild, iterable?: Iterable<any>);
+    public Thread: Thread;
   }
 
   export class GuildEmojiManager extends BaseGuildEmojiManager {
@@ -2870,6 +2897,9 @@ declare module 'discord.js' {
     roleDelete: [role: Role];
     roleUpdate: [oldRole: Role, newRole: Role];
     typingStart: [channel: TextChannel | NewsChannel | DMChannel | PartialDMChannel, user: User | PartialUser];
+	threadCreate: [thread: Thread];
+	threadDelete: [thread: Thread];
+	threadUpdate: [thread: Thread];
     userUpdate: [oldUser: User | PartialUser, newUser: User];
     voiceStateUpdate: [oldState: VoiceState, newState: VoiceState];
     webhookUpdate: [channel: TextChannel];
@@ -3183,6 +3213,8 @@ declare module 'discord.js' {
   }
 
   type GuildChannelResolvable = Snowflake | GuildChannel;
+
+  type ThreadResolvable = Snowflake | Thread;
 
   interface GuildCreateChannelOptions {
     permissionOverwrites?: OverwriteResolvable[] | Collection<Snowflake, OverwriteResolvable>;
@@ -3627,6 +3659,8 @@ declare module 'discord.js' {
     | 'GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING'
     | 'GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING'
     | 'REPLY'
+	| 'THREAD_STARTER_MESSAGE'
+	| 'THREAD_CREATED'
     | 'APPLICATION_COMMAND';
 
   type NSFWLevel = keyof typeof NSFWLevels;

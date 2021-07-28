@@ -748,6 +748,22 @@ class Message extends Base {
 	}
 
 	/**
+	 * Starts a thread
+	 * @author Lilly Rizuri
+	 * @date 28/07/2021
+	 * @param {string} name
+	 * @param {60|1440|4320|10080} autoArchiveDuration
+	 * @returns {Promise<Thread>}
+	 * @memberof Message
+	 */
+	async startThread(name, autoArchiveDuration) {
+		const data = await this.client.api.channels[this.channel.id].messages[this.id].threads
+			.post({ data: { name, auto_archive_duration: autoArchiveDuration } });
+		
+		return this.client.actions.ThreadCreate.handle(d).thread;
+	}
+
+	/**
 	 * When concatenated with a string, this automatically concatenates the message's content instead of the object.
 	 * @returns {string}
 	 * @example

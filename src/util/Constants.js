@@ -272,6 +272,9 @@ exports.Events = {
 	VOICE_STATE_UPDATE: 'voiceStateUpdate',
 	VOICE_BROADCAST_SUBSCRIBE: 'subscribe',
 	VOICE_BROADCAST_UNSUBSCRIBE: 'unsubscribe',
+	THREAD_CREATE: 'threadCreate',
+	THREAD_DELETE: 'threadDelete',
+	THREAD_UPDATE: 'threadUpdate',
 	TYPING_START: 'typingStart',
 	TYPING_STOP: 'typingStop',
 	WEBHOOKS_UPDATE: 'webhookUpdate',
@@ -391,6 +394,9 @@ exports.WSEvents = keyMirror([
 	'USER_UPDATE',
 	'PRESENCE_UPDATE',
 	'TYPING_START',
+	"THREAD_CREATE",
+	"THREAD_DELETE",
+	"THREAD_UPDATE",
 	'VOICE_STATE_UPDATE',
 	'VOICE_SERVER_UPDATE',
 	'WEBHOOKS_UPDATE',
@@ -469,9 +475,11 @@ exports.MessageTypes = [
 	'GUILD_DISCOVERY_REQUALIFIED',
 	'GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING',
 	'GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING',
-	null,
+	'THREAD_CREATED',
 	'REPLY',
 	'APPLICATION_COMMAND',
+	"THREAD_STARTER_MESSAGE",
+	"GUILD_INVITE_REMINDER"
 ];
 
 /**
@@ -507,7 +515,9 @@ exports.ChannelTypes = createEnum([
 	'NEWS',
 	// 6
 	'STORE',
-	...Array(6).fill(null),
+	...Array(4).fill(null),
+	'THREAD',
+	'THREAD',
 	// 13
 	'STAGE',
 ]);
