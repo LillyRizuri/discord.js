@@ -760,7 +760,7 @@ class Message extends Base {
 		const data = await this.client.api.channels[this.channel.id].messages[this.id].threads
 			.post({ data: { name, auto_archive_duration: autoArchiveDuration } });
 		
-		return this.client.actions.ThreadCreate.handle(d).thread;
+		return this.client.actions.ThreadCreate.handle(data).thread;
 	}
 
 	/**
