@@ -152,17 +152,17 @@ class TextChannel extends GuildChannel {
 	 * @date 28/07/2021
 	 * @param {string} name
 	 * @param {60|1440|4320|10080} autoArchiveDuration
-	 * @param {boolean} [private=false]
+	 * @param {boolean} [isPrivate=false]
 	 * @returns {Promise<Thread>}
 	 * @memberof TextChannel
 	 */
-	async startThread(name, autoArchiveDuration, private = false) {
+	async startThread(name, autoArchiveDuration, isPrivate = false) {
 		const data = await this.client.api.channels[this.channel.id].threads
 			.post({
 				data: {
 					name,
 					auto_archive_duration: autoArchiveDuration,
-					private: private ? 12 : 11
+					private: isPrivate ? 12 : 11
 				}
 			});
 
