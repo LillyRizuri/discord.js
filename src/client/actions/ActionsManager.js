@@ -38,6 +38,9 @@ class ActionsManager {
     this.register(require('./GuildIntegrationsUpdate'));
     this.register(require('./WebhooksUpdate'));
     this.register(require('./TypingStart'));
+    this.register(require('./ThreadCreate'));
+    this.register(require('./ThreadDelete'));
+    this.register(require('./ThreadUpdate'));
   }
 
   register(Action) {
