@@ -35,7 +35,7 @@ class ThreadManager extends BaseManager {
 			return existing;
 		}
 		
-		guild = guild || client.guilds.cache.get(data.guild_id);
+		guild = guild || this.client.guilds.cache.get(data.guild_id);
 
 		const thread = new Thread(guild, data);
 
