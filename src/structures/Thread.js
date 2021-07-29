@@ -31,15 +31,6 @@ class Thread extends TextChannel {
 		this.ownerID = data?.owner_id || null;
 
 		/**
-		 * The user that started the thread.
-		 * @author Lilly Rizuri
-		 * @date 28/07/2021
-		 * @type {User}
-		 * @memberof Thread
-		 */
-		this.owner = this.client.users.add(data.owner_id ?? data.member.user);
-
-		/**
 		 * The number of messages in the thread.
 		 * @author Lilly Rizuri
 		 * @date 28/07/2021
