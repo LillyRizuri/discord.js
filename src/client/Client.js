@@ -21,6 +21,7 @@ const DataResolver = require('../util/DataResolver');
 const Intents = require('../util/Intents');
 const Permissions = require('../util/Permissions');
 const Structures = require('../util/Structures');
+const ThreadManager = require("../managers/ThreadManager");
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
@@ -122,6 +123,14 @@ class Client extends BaseClient {
      * @type {ChannelManager}
      */
     this.channels = new ChannelManager(this);
+
+    /**
+     * All of the {@link Thread}s that the client is currently handling, mapped by their IDs -
+     * as long as sharding isn't being used, this will be *every* thread in *every* guild the bot
+     * is a member of.
+     * @type {ThreadManager}
+     */
+    this.threads = new ThreadManager(this);
 
     const ClientPresence = Structures.get('ClientPresence');
     /**
