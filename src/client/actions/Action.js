@@ -48,6 +48,23 @@ class GenericAction {
     );
   }
 
+  getThread(data) {
+    const id = data.channel_id || data.id;
+    return (
+      data.channel ||
+      this.getPayload(
+        {
+          id,
+          guild_id: data.guild_id,
+          recipients: [data.author || { id: data.user_id }],
+        },
+        this.client.threads,
+        id,
+        PartialTypes.CHANNEL,
+      )
+    );
+  }
+
   getMessage(data, channel, cache) {
     const id = data.message_id || data.id;
     return (

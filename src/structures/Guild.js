@@ -392,7 +392,9 @@ class Guild extends BaseGuild {
     
     if (data.threads) {
       this.threads.cache.clear();
-      for (const rawThread of data.threads) this.threads.add(rawThread);
+      for (const rawThread of data.threads) {
+		  this.client.threads.add(rawThread);
+		};
     }
 
     if (data.roles) {

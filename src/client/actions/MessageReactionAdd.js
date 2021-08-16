@@ -22,7 +22,10 @@ class MessageReactionAdd extends Action {
     if (!user) return false;
 
     // Verify channel
-    const channel = this.getChannel(data);
+    let channel = this.getChannel(data);
+	if (!channel) {
+		channel = this.getThread(data);
+	}
     if (!channel || channel.type === 'voice') return false;
 
     // Verify message

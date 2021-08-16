@@ -6,7 +6,10 @@ const { Events } = require('../../util/Constants');
 class MessageCreateAction extends Action {
   handle(data) {
     const client = this.client;
-    const channel = this.getChannel(data);
+    let channel = this.getChannel(data);
+	if (!channel) {
+		channel = this.getThread(data);
+	}
     if (channel) {
       const existing = channel.messages.cache.get(data.id);
       if (existing) return { message: existing };

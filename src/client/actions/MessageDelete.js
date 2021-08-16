@@ -6,7 +6,10 @@ const { Events } = require('../../util/Constants');
 class MessageDeleteAction extends Action {
   handle(data) {
     const client = this.client;
-    const channel = this.getChannel(data);
+    let channel = this.getChannel(data);
+	if (!channel) {
+		channel = this.getThread(data);
+	}
     let message;
     if (channel) {
       message = this.getMessage(data, channel);
