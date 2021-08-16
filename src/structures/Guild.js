@@ -12,6 +12,7 @@ const { Error, TypeError } = require('../errors');
 const GuildApplicationCommandManager = require('../managers/GuildApplicationCommandManager');
 const GuildBanManager = require('../managers/GuildBanManager');
 const GuildChannelManager = require('../managers/GuildChannelManager');
+const GuildThreadManager = require('../managers/GuildThreadManager');
 const GuildEmojiManager = require('../managers/GuildEmojiManager');
 const GuildMemberManager = require('../managers/GuildMemberManager');
 const PresenceManager = require('../managers/PresenceManager');
@@ -57,6 +58,12 @@ class Guild extends BaseGuild {
      * @type {GuildChannelManager}
      */
     this.channels = new GuildChannelManager(this);
+
+    /**
+     * A manager of the threads belonging to this guild
+     * @type {GuildThreadManager}
+     */
+    this.threads = new GuildThreadManager(this);
 
     /**
      * A manager of the bans belonging to this guild
@@ -404,6 +411,12 @@ class Guild extends BaseGuild {
     if (data.presences) {
       for (const presence of data.presences) {
         this.presences.add(Object.assign(presence, { guild: this }));
+      }
+    }
+
+    if (data.threads) {
+      for (const thread of data.threads) {
+        this.threads.add(Object.assign(thread, { guild: this }));
       }
     }
 
