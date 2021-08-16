@@ -389,6 +389,11 @@ class Guild extends BaseGuild {
         this.client.channels.add(rawChannel, this);
       }
     }
+    
+    if (data.threads) {
+      this.threads.cache.clear();
+      for (const rawThread of data.threads) this.threads.add(rawThread);
+    }
 
     if (data.roles) {
       this.roles.cache.clear();
