@@ -72,6 +72,16 @@ class User extends Base {
       this.avatar = null;
     }
 
+    if ('banner' in data) {
+      /**
+       * The ID of the user's banner
+       * @type {?string}
+       */
+      this.banner = data.banner;
+    } else if (typeof this.banner !== 'string') {
+      this.banner = null;
+    }
+
     if ('system' in data) {
       /**
        * Whether the user is an Official Discord System user (part of the urgent message system)
@@ -160,6 +170,16 @@ class User extends Base {
   avatarURL({ format, size, dynamic } = {}) {
     if (!this.avatar) return null;
     return this.client.rest.cdn.Avatar(this.id, this.avatar, format, size, dynamic);
+  }
+
+  /**
+   * A link to the user's banner.
+   * @param {ImageURLOptions} [options={}] Options for the Image URL
+   * @returns {?string}
+   */
+  bannerURL({ format, size, dynamic } = {}) {
+    if (!this.banner) return null;
+    return this.client.rest.cdn.Banner(this.id, this.banner, format, size, dynamic);
   }
 
   /**
