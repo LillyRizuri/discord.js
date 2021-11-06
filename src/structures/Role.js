@@ -84,6 +84,18 @@ class Role extends Base {
     this.deleted = false;
 
     /**
+     * The unicode emoji of the role.
+     * @type {?string}
+     */
+    this.emoji = data?.unicode_emoji;
+
+    /**
+     * The icon hash of the role.
+     * @type {?string}
+     */
+    this.iconHash = data?.icon;
+
+    /**
      * The tags this role has
      * @type {?Object}
      * @property {Snowflake} [botID] The id of the bot this role belongs to
@@ -102,6 +114,13 @@ class Role extends Base {
         this.tags.premiumSubscriberRole = true;
       }
     }
+  }
+
+  get icon() {
+    if (this?.iconHash !== void 0) {
+      return null;
+    }
+    return this.client.rest.cdn.RoleIcon(this.id, this.iconHash, 'png', true);
   }
 
   /**

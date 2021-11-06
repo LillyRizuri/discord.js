@@ -34,29 +34,6 @@
     "no-compare-neg-zero": "error",
     "no-template-curly-in-string": "error",
     "no-unsafe-negation": "error",
-    "valid-jsdoc": [
-      "error",
-      {
-        "requireReturn": false,
-        "requireReturnDescription": false,
-        "prefer": {
-          "return": "returns",
-          "arg": "param"
-        },
-        "preferType": {
-          "String": "string",
-          "Number": "number",
-          "Boolean": "boolean",
-          "Symbol": "symbol",
-          "object": "Object",
-          "function": "Function",
-          "array": "Array",
-          "date": "Date",
-          "error": "Error",
-          "null": "void"
-        }
-      }
-    ],
 
     "accessor-pairs": "warn",
     "array-callback-return": "error",
@@ -86,7 +63,6 @@
     "no-useless-concat": "error",
     "no-useless-escape": "error",
     "no-useless-return": "error",
-    "no-void": "error",
     "no-warning-comments": "warn",
     "prefer-promise-reject-errors": "error",
     "require-await": "warn",
@@ -120,7 +96,7 @@
     "key-spacing": "error",
     "keyword-spacing": "error",
     "max-depth": "error",
-    "max-len": ["error", 120, 2],
+    "max-len": ["error", 300, 2],
     "max-nested-callbacks": ["error", { "max": 4 }],
     "max-statements-per-line": ["error", { "max": 2 }],
     "new-cap": "off",

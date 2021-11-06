@@ -78,6 +78,7 @@ class Permissions extends BitField {
  * * `MANAGE_ROLES`
  * * `MANAGE_WEBHOOKS`
  * * `MANAGE_EMOJIS`
+ * * `MANAGE_EVENTS`
  * * `USE_APPLICATION_COMMANDS`
  * * `REQUEST_TO_SPEAK`
  * @type {Object<string, bigint>}
@@ -117,10 +118,13 @@ Permissions.FLAGS = {
   MANAGE_EMOJIS: 1n << 30n,
   USE_APPLICATION_COMMANDS: 1n << 31n,
   REQUEST_TO_SPEAK: 1n << 32n,
+  MANAGE_EVENTS: 1n << 33n,
   MANAGE_THREADS: 1n << 34n,
   USE_PUBLIC_THREADS: 1n << 35n,
   USE_PRIVATE_THREADS: 1n << 36n,
   USE_EXTERNAL_STICKERS: 1n << 37n,
+  SEND_MESSAGES_IN_THREADS: 1n << 38n,
+  START_EMBEDDED_ACTIVITIES: 1n << 39n,
 };
 
 /**

@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseGuild = require('./BaseGuild');
+const Event = require('./Event');
 const GuildAuditLogs = require('./GuildAuditLogs');
 const GuildPreview = require('./GuildPreview');
 const GuildTemplate = require('./GuildTemplate');
@@ -12,9 +13,9 @@ const { Error, TypeError } = require('../errors');
 const GuildApplicationCommandManager = require('../managers/GuildApplicationCommandManager');
 const GuildBanManager = require('../managers/GuildBanManager');
 const GuildChannelManager = require('../managers/GuildChannelManager');
-const GuildThreadManager = require('../managers/GuildThreadManager');
 const GuildEmojiManager = require('../managers/GuildEmojiManager');
 const GuildMemberManager = require('../managers/GuildMemberManager');
+const GuildThreadManager = require('../managers/GuildThreadManager');
 const PresenceManager = require('../managers/PresenceManager');
 const RoleManager = require('../managers/RoleManager');
 const VoiceStateManager = require('../managers/VoiceStateManager');
@@ -389,12 +390,12 @@ class Guild extends BaseGuild {
         this.client.channels.add(rawChannel, this);
       }
     }
-    
+
     if (data.threads) {
       this.threads.cache.clear();
       for (const rawThread of data.threads) {
-		  this.client.threads.add(rawThread);
-		};
+        this.client.threads.add(rawThread);
+      }
     }
 
     if (data.roles) {
@@ -441,6 +442,13 @@ class Guild extends BaseGuild {
         emojis: data.emojis,
       });
     }
+  }
+
+  get events() {
+    return this.client.api
+      .guilds(this.id)
+      .events.get()
+      .then(events => [...events].map(_event => new Event(_event)));
   }
 
   /**
