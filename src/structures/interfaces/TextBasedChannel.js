@@ -177,10 +177,7 @@ class TextBasedChannel {
     const { data, files } = await apiMessage.resolveFiles();
     return this.client.api.channels[this.id].messages
       .post({ data, files })
-      .then(d => {
-		  console.log(d);
-		  return this.client.actions.MessageCreate.handle(d).message
-	  });
+      .then(d => this.client.actions.MessageCreate.handle(d).message);
   }
 
   /**
