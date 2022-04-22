@@ -45,7 +45,7 @@ class InteractionResponses {
 
 	async fetchReply() {
 		const data = await this.webhook.fetchMessage("@original");
-		return new Message(this.client, data);
+		return new Message(this.client, data, this.client.channels.fetch(data.channel_id));
 	}
 
 	editReply(content, options) {
