@@ -3,8 +3,7 @@
 const { InteractionResponseTypes } = require("../../util/Constants");
 const MessageFlags = require("../../util/MessageFlags");
 const APIMessage = require("../APIMessage");
-
-module.exports = class {
+class InteractionResponses {
 	async defer({ ephemeral } = {}) {
 		if (this.deferred || this.replied) {
 			throw new Error("INTERACTION_ALREADY_REPLIED");
@@ -109,3 +108,5 @@ module.exports = class {
 		}
 	}
 };
+
+module.exports = InteractionResponses;
