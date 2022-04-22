@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const Base = require('./Base');
-const { InteractionTypes } = require('../util/Constants');
-const SnowflakeUtil = require('../util/SnowflakeUtil');
+const Base = require("./Base");
+const { InteractionTypes } = require("../util/Constants");
+const SnowflakeUtil = require("../util/SnowflakeUtil");
 
 /**
  * Represents an interaction.
@@ -30,7 +30,7 @@ class Interaction extends Base {
      * @name Interaction#token
      * @readonly
      */
-    Object.defineProperty(this, 'token', { value: data.token });
+    Object.defineProperty(this, "token", { value: data.token });
 
     /**
      * The ID of the application

@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { PartialTypes } = require('../../util/Constants');
+const { PartialTypes } = require("../../util/Constants");
 
 /*
 

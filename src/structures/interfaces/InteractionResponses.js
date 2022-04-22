@@ -43,7 +43,7 @@ class InteractionResponses {
 	}
 
 	fetchReply() {
-		return this.webhook.fetchMessage("@original");
+		return this.client.actions.MessageCreate.handle(this.webhook.fetchMessage("@original")).message;
 	}
 
 	editReply(content, options) {

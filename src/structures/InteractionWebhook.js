@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Webhook = require('./Webhook');
+const Webhook = require("./Webhook");
 
 /**
  * Represents a webhook for an Interaction
@@ -19,9 +19,9 @@ class InteractionWebhook {
      * @type {Client}
      * @readonly
      */
-    Object.defineProperty(this, 'client', { value: client });
+    Object.defineProperty(this, "client", { value: client });
     this.id = id;
-    Object.defineProperty(this, 'token', { value: token, writable: true, configurable: true });
+    Object.defineProperty(this, "token", { value: token, writable: true, configurable: true });
   }
 
   // These are here only for documentation purposes - they are implemented by Webhook
@@ -39,6 +39,6 @@ class InteractionWebhook {
   get url() {}
 }
 
-Webhook.applyToClass(InteractionWebhook, ['sendSlackMessage', 'edit', 'delete', 'createdTimestamp', 'createdAt']);
+Webhook.applyToClass(InteractionWebhook, ["sendSlackMessage", "edit", "delete", "createdTimestamp", "createdAt"]);
 
 module.exports = InteractionWebhook;

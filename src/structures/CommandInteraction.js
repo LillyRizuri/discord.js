@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const Interaction = require('./Interaction');
-const InteractionWebhook = require('./InteractionWebhook');
-const InteractionResponses = require('./interfaces/InteractionResponses');
-const Collection = require('../util/Collection');
-const { ApplicationCommandOptionTypes } = require('../util/Constants');
+const Interaction = require("./Interaction");
+const InteractionWebhook = require("./InteractionWebhook");
+const InteractionResponses = require("./interfaces/InteractionResponses");
+const Collection = require("../util/Collection");
+const { ApplicationCommandOptionTypes } = require("../util/Constants");
 
 /**
  * Represents a command interaction.
@@ -96,8 +96,8 @@ class CommandInteraction extends Interaction {
       type: ApplicationCommandOptionTypes[option.type],
     };
 
-    if ('value' in option) result.value = option.value;
-    if ('options' in option) result.options = this._createOptionsCollection(option.options, resolved);
+    if ("value" in option) result.value = option.value;
+    if ("options" in option) result.options = this._createOptionsCollection(option.options, resolved);
 
     const user = resolved?.users?.[option.value];
     if (user) result.user = this.client.users.add(user);
@@ -123,7 +123,7 @@ class CommandInteraction extends Interaction {
    */
   _createOptionsCollection(options, resolved) {
     const optionsCollection = new Collection();
-    if (typeof options === 'undefined') return optionsCollection;
+    if (typeof options === "undefined") return optionsCollection;
     for (const option of options) {
       optionsCollection.set(option.name, this.transformOption(option, resolved));
     }
@@ -140,6 +140,6 @@ class CommandInteraction extends Interaction {
   followUp() {}
 }
 
-InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update']);
+InteractionResponses.applyToClass(CommandInteraction, ["deferUpdate", "update"]);
 
 module.exports = CommandInteraction;
