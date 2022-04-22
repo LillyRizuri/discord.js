@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-const BaseMessageComponent = require('./BaseMessageComponent');
-const MessageAttachment = require('./MessageAttachment');
-const MessageEmbed = require('./MessageEmbed');
-const { RangeError } = require('../errors');
-const DataResolver = require('../util/DataResolver');
-const MessageFlags = require('../util/MessageFlags');
-const Util = require('../util/Util');
+const BaseMessageComponent = require("./BaseMessageComponent");
+const MessageAttachment = require("./MessageAttachment");
+const MessageEmbed = require("./MessageEmbed");
+const { RangeError } = require("../errors");
+const DataResolver = require("../util/DataResolver");
+const MessageFlags = require("../util/MessageFlags");
+const Util = require("../util/Util");
 
 /**
  * Represents a message to be sent to the API.
@@ -48,8 +48,8 @@ class APIMessage {
 	 * @readonly
 	 */
 	get isWebhook() {
-		const Webhook = require('./Webhook');
-		const WebhookClient = require('../client/WebhookClient');
+		const Webhook = require("./Webhook");
+		const WebhookClient = require("../client/WebhookClient");
 		return this.target instanceof Webhook || this.target instanceof WebhookClient;
 	}
 
@@ -59,8 +59,8 @@ class APIMessage {
 	 * @readonly
 	 */
 	get isUser() {
-		const User = require('./User');
-		const GuildMember = require('./GuildMember');
+		const User = require("./User");
+		const GuildMember = require("./GuildMember");
 		return this.target instanceof User || this.target instanceof GuildMember;
 	}
 
@@ -70,7 +70,7 @@ class APIMessage {
 	 * @readonly
 	 */
 	get isMessage() {
-		const Message = require('./Message');
+		const Message = require("./Message");
 		return this.target instanceof Message;
 	}
 
@@ -80,7 +80,7 @@ class APIMessage {
 	 * @readonly
 	 */
 	get isInteraction() {
-		const Interaction = require('./Interaction');
+		const Interaction = require("./Interaction");
 		return this.target instanceof Interaction;
 	}
 
@@ -91,24 +91,24 @@ class APIMessage {
 	makeContent() {
 		let content;
 		if (this.options.content === null) {
-			content = '';
-		} else if (typeof this.options.content !== 'undefined') {
-			content = Util.verifyString(this.options.content, RangeError, 'MESSAGE_CONTENT_TYPE', false);
+			content = "";
+		} else if (typeof this.options.content !== "undefined") {
+			content = Util.verifyString(this.options.content, RangeError, "MESSAGE_CONTENT_TYPE", false);
 		}
 
-		if (typeof content !== 'string') return content;
+		if (typeof content !== "string") return content;
 
-		const isSplit = typeof this.options.split !== 'undefined' && this.options.split !== false;
-		const isCode = typeof this.options.code !== 'undefined' && this.options.code !== false;
+		const isSplit = typeof this.options.split !== "undefined" && this.options.split !== false;
+		const isCode = typeof this.options.code !== "undefined" && this.options.code !== false;
 		const splitOptions = isSplit ? { ...this.options.split } : undefined;
 
 		if (content) {
 			if (isCode) {
-				const codeName = typeof this.options.code === 'string' ? this.options.code : '';
+				const codeName = typeof this.options.code === "string" ? this.options.code : "";
 				content = `\`\`\`${codeName}\n${Util.cleanCodeBlockContent(content)}\n\`\`\``;
 				if (isSplit) {
-					splitOptions.prepend = `${splitOptions.prepend || ''}\`\`\`${codeName}\n`;
-					splitOptions.append = `\n\`\`\`${splitOptions.append || ''}`;
+					splitOptions.prepend = `${splitOptions.prepend || ""}\`\`\`${codeName}\n`;
+					splitOptions.append = `\n\`\`\`${splitOptions.append || ""}`;
 				}
 			}
 
@@ -134,11 +134,11 @@ class APIMessage {
 		const tts = Boolean(this.options.tts);
 
 		let nonce;
-		if (typeof this.options.nonce !== 'undefined') {
+		if (typeof this.options.nonce !== "undefined") {
 			nonce = this.options.nonce;
 			// eslint-disable-next-line max-len
-			if (typeof nonce === 'number' ? !Number.isInteger(nonce) : typeof nonce !== 'string') {
-				throw new RangeError('MESSAGE_NONCE_TYPE');
+			if (typeof nonce === "number" ? !Number.isInteger(nonce) : typeof nonce !== "string") {
+				throw new RangeError("MESSAGE_NONCE_TYPE");
 			}
 		}
 
@@ -170,7 +170,7 @@ class APIMessage {
 		}
 
 		let allowedMentions =
-			typeof this.options.allowedMentions === 'undefined'
+			typeof this.options.allowedMentions === "undefined"
 				? this.target.client.options.allowedMentions
 				: this.options.allowedMentions;
 
@@ -181,7 +181,7 @@ class APIMessage {
 		}
 
 		let message_reference;
-		if (typeof this.options.reply === 'object') {
+		if (typeof this.options.reply === "object") {
 			const message_id = this.isMessage
 				? this.target.channel.messages.resolveID(this.options.reply.messageReference)
 				: this.target.messages.resolveID(this.options.reply.messageReference);
@@ -203,7 +203,7 @@ class APIMessage {
 			username,
 			avatar_url: avatarURL,
 			allowed_mentions:
-				typeof content === 'undefined' && typeof message_reference === 'undefined' ? undefined : allowedMentions,
+				typeof content === "undefined" && typeof message_reference === "undefined" ? undefined : allowedMentions,
 			flags,
 			message_reference,
 			attachments: this.options.attachments,
@@ -282,7 +282,7 @@ class APIMessage {
 		let name;
 
 		const findName = thing => {
-			if (typeof thing === 'string') {
+			if (typeof thing === "string") {
 				return Util.basename(thing);
 			}
 
@@ -290,11 +290,11 @@ class APIMessage {
 				return Util.basename(thing.path);
 			}
 
-			return 'file.jpg';
+			return "file.jpg";
 		};
 
 		const ownAttachment =
-			typeof fileLike === 'string' || fileLike instanceof Buffer || typeof fileLike.pipe === 'function';
+			typeof fileLike === "string" || fileLike instanceof Buffer || typeof fileLike.pipe === "function";
 		if (ownAttachment) {
 			attachment = fileLike;
 			name = findName(attachment);
@@ -336,7 +336,7 @@ class APIMessage {
 	 * @returns {MessageOptions|WebhookMessageOptions}
 	 */
 	static transformOptions(content, options, extra = {}, isWebhook = false) {
-		if (!options && typeof content === 'object' && !Array.isArray(content)) {
+		if (!options && typeof content === "object" && !Array.isArray(content)) {
 			options = content;
 			content = undefined;
 		}
@@ -371,9 +371,9 @@ class APIMessage {
 	 * @returns {MessageOptions|WebhookMessageOptions}
 	 */
 	static create(target, content, options, extra = {}) {
-		const Interaction = require('./Interaction');
-		const Webhook = require('./Webhook');
-		const WebhookClient = require('../client/WebhookClient');
+		const Interaction = require("./Interaction");
+		const Webhook = require("./Webhook");
+		const WebhookClient = require("../client/WebhookClient");
 
 		const isWebhook = target instanceof Interaction || target instanceof Webhook || target instanceof WebhookClient;
 		const transformed = this.transformOptions(content, options, extra, isWebhook);

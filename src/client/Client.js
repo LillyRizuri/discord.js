@@ -1,26 +1,26 @@
-'use strict';
+"use strict";
 
-const BaseClient = require('./BaseClient');
-const ActionsManager = require('./actions/ActionsManager');
-const ClientVoiceManager = require('./voice/ClientVoiceManager');
-const WebSocketManager = require('./websocket/WebSocketManager');
-const { Error, TypeError, RangeError } = require('../errors');
-const BaseGuildEmojiManager = require('../managers/BaseGuildEmojiManager');
-const ChannelManager = require('../managers/ChannelManager');
-const GuildManager = require('../managers/GuildManager');
-const UserManager = require('../managers/UserManager');
-const ShardClientUtil = require('../sharding/ShardClientUtil');
-const GuildPreview = require('../structures/GuildPreview');
-const GuildTemplate = require('../structures/GuildTemplate');
-const Invite = require('../structures/Invite');
-const VoiceRegion = require('../structures/VoiceRegion');
-const Webhook = require('../structures/Webhook');
-const Collection = require('../util/Collection');
-const { Events, DefaultOptions, InviteScopes } = require('../util/Constants');
-const DataResolver = require('../util/DataResolver');
-const Intents = require('../util/Intents');
-const Permissions = require('../util/Permissions');
-const Structures = require('../util/Structures');
+const BaseClient = require("./BaseClient");
+const ActionsManager = require("./actions/ActionsManager");
+const ClientVoiceManager = require("./voice/ClientVoiceManager");
+const WebSocketManager = require("./websocket/WebSocketManager");
+const { Error, TypeError, RangeError } = require("../errors");
+const BaseGuildEmojiManager = require("../managers/BaseGuildEmojiManager");
+const ChannelManager = require("../managers/ChannelManager");
+const GuildManager = require("../managers/GuildManager");
+const UserManager = require("../managers/UserManager");
+const ShardClientUtil = require("../sharding/ShardClientUtil");
+const GuildPreview = require("../structures/GuildPreview");
+const GuildTemplate = require("../structures/GuildTemplate");
+const Invite = require("../structures/Invite");
+const VoiceRegion = require("../structures/VoiceRegion");
+const Webhook = require("../structures/Webhook");
+const Collection = require("../util/Collection");
+const { Events, DefaultOptions, InviteScopes } = require("../util/Constants");
+const DataResolver = require("../util/DataResolver");
+const Intents = require("../util/Intents");
+const Permissions = require("../util/Permissions");
+const Structures = require("../util/Structures");
 const ThreadManager = require("../managers/ThreadManager");
 
 /**
@@ -32,25 +32,25 @@ class Client extends BaseClient {
    * @param {ClientOptions} options Options for the client
    */
   constructor(options) {
-    super(Object.assign({ _tokenType: 'Bot' }, options));
+    super(Object.assign({ _tokenType: "Bot" }, options));
 
     // Obtain shard details from environment or if present, worker threads
     let data = process.env;
     try {
       // Test if worker threads module is present and used
-      data = require('worker_threads').workerData || data;
+      data = require("worker_threads").workerData || data;
     } catch {
       // Do nothing
     }
 
     if (this.options.shards === DefaultOptions.shards) {
-      if ('SHARDS' in data) {
+      if ("SHARDS" in data) {
         this.options.shards = JSON.parse(data.SHARDS);
       }
     }
 
     if (this.options.shardCount === DefaultOptions.shardCount) {
-      if ('SHARD_COUNT' in data) {
+      if ("SHARD_COUNT" in data) {
         this.options.shardCount = Number(data.SHARD_COUNT);
       } else if (Array.isArray(this.options.shards)) {
         this.options.shardCount = this.options.shards.length;
@@ -59,11 +59,11 @@ class Client extends BaseClient {
 
     const typeofShards = typeof this.options.shards;
 
-    if (typeofShards === 'undefined' && typeof this.options.shardCount === 'number') {
+    if (typeofShards === "undefined" && typeof this.options.shardCount === "number") {
       this.options.shards = Array.from({ length: this.options.shardCount }, (_, i) => i);
     }
 
-    if (typeofShards === 'number') this.options.shards = [this.options.shards];
+    if (typeofShards === "number") this.options.shards = [this.options.shards];
 
     if (Array.isArray(this.options.shards)) {
       this.options.shards = [
@@ -132,7 +132,7 @@ class Client extends BaseClient {
      */
     this.threads = new ThreadManager(this);
 
-    const ClientPresence = Structures.get('ClientPresence');
+    const ClientPresence = Structures.get("ClientPresence");
     /**
      * The presence of the Client
      * @private
@@ -140,8 +140,8 @@ class Client extends BaseClient {
      */
     this.presence = new ClientPresence(this, this.options.presence);
 
-    Object.defineProperty(this, 'token', { writable: true });
-    if (!this.token && 'DISCORD_TOKEN' in process.env) {
+    Object.defineProperty(this, "token", { writable: true });
+    if (!this.token && "DISCORD_TOKEN" in process.env) {
       /**
        * Authorization token for the logged in bot.
        * If present, this defaults to `process.env.DISCORD_TOKEN` when instantiating the client
@@ -216,21 +216,21 @@ class Client extends BaseClient {
    * client.login('my token');
    */
   async login(token = this.token) {
-    if (!token || typeof token !== 'string') throw new Error('TOKEN_INVALID');
-    this.token = token = token.replace(/^(Bot|Bearer)\s*/i, '');
+    if (!token || typeof token !== "string") throw new Error("TOKEN_INVALID");
+    this.token = token = token.replace(/^(Bot|Bearer)\s*/i, "");
     this.emit(
       Events.DEBUG,
       `Provided token: ${token
-        .split('.')
-        .map((val, i) => (i > 1 ? val.replace(/./g, '*') : val))
-        .join('.')}`,
+        .split(".")
+        .map((val, i) => (i > 1 ? val.replace(/./g, "*") : val))
+        .join(".")}`,
     );
 
     if (this.options.presence) {
       this.options.ws.presence = await this.presence._parse(this.options.presence);
     }
 
-    this.emit(Events.DEBUG, 'Preparing to connect to the gateway...');
+    this.emit(Events.DEBUG, "Preparing to connect to the gateway...");
 
     try {
       await this.ws.connect();
@@ -331,8 +331,8 @@ class Client extends BaseClient {
    * console.log(`Successfully removed ${amount} messages from the cache.`);
    */
   sweepMessages(lifetime = this.options.messageCacheLifetime) {
-    if (typeof lifetime !== 'number' || isNaN(lifetime)) {
-      throw new TypeError('INVALID_TYPE', 'lifetime', 'number');
+    if (typeof lifetime !== "number" || isNaN(lifetime)) {
+      throw new TypeError("INVALID_TYPE", "lifetime", "number");
     }
     if (lifetime <= 0) {
       this.emit(Events.DEBUG, "Didn't sweep messages - lifetime is unlimited");
@@ -367,7 +367,7 @@ class Client extends BaseClient {
    */
   fetchGuildPreview(guild) {
     const id = this.guilds.resolveID(guild);
-    if (!id) throw new TypeError('INVALID_TYPE', 'guild', 'GuildResolvable');
+    if (!id) throw new TypeError("INVALID_TYPE", "guild", "GuildResolvable");
     return this.api
       .guilds(id)
       .preview.get()
@@ -398,39 +398,39 @@ class Client extends BaseClient {
    * console.log(`Generated bot invite link: ${link}`);
    */
   generateInvite(options = {}) {
-    if (typeof options !== 'object') throw new TypeError('INVALID_TYPE', 'options', 'object', true);
-    if (!this.application) throw new Error('CLIENT_NOT_READY', 'generate an invite link');
+    if (typeof options !== "object") throw new TypeError("INVALID_TYPE", "options", "object", true);
+    if (!this.application) throw new Error("CLIENT_NOT_READY", "generate an invite link");
 
     const query = new URLSearchParams({
       client_id: this.application.id,
-      scope: 'bot',
+      scope: "bot",
     });
 
     if (options.permissions) {
       const permissions = Permissions.resolve(options.permissions);
-      if (permissions) query.set('permissions', permissions);
+      if (permissions) query.set("permissions", permissions);
     }
 
     if (options.disableGuildSelect) {
-      query.set('disable_guild_select', true);
+      query.set("disable_guild_select", true);
     }
 
     if (options.guild) {
       const guildID = this.guilds.resolveID(options.guild);
-      if (!guildID) throw new TypeError('INVALID_TYPE', 'options.guild', 'GuildResolvable');
-      query.set('guild_id', guildID);
+      if (!guildID) throw new TypeError("INVALID_TYPE", "options.guild", "GuildResolvable");
+      query.set("guild_id", guildID);
     }
 
     if (options.additionalScopes) {
       const scopes = options.additionalScopes;
       if (!Array.isArray(scopes)) {
-        throw new TypeError('INVALID_TYPE', 'additionalScopes', 'Array of Invite Scopes', true);
+        throw new TypeError("INVALID_TYPE", "additionalScopes", "Array of Invite Scopes", true);
       }
       const invalidScope = scopes.find(scope => !InviteScopes.includes(scope));
       if (invalidScope) {
-        throw new TypeError('INVALID_ELEMENT', 'Array', 'additionalScopes', invalidScope);
+        throw new TypeError("INVALID_ELEMENT", "Array", "additionalScopes", invalidScope);
       }
-      query.set('scope', ['bot', ...scopes].join(' '));
+      query.set("scope", ["bot", ...scopes].join(" "));
     }
 
     return `${this.options.http.api}${this.api.oauth2.authorize}?${query}`;
@@ -459,47 +459,47 @@ class Client extends BaseClient {
    * @private
    */
   _validateOptions(options = this.options) {
-    if (typeof options.intents === 'undefined') {
-      throw new TypeError('CLIENT_MISSING_INTENTS');
+    if (typeof options.intents === "undefined") {
+      throw new TypeError("CLIENT_MISSING_INTENTS");
     } else {
       options.intents = Intents.resolve(options.intents);
     }
-    if (typeof options.shardCount !== 'number' || isNaN(options.shardCount) || options.shardCount < 1) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'shardCount', 'a number greater than or equal to 1');
+    if (typeof options.shardCount !== "number" || isNaN(options.shardCount) || options.shardCount < 1) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "shardCount", "a number greater than or equal to 1");
     }
-    if (options.shards && !(options.shards === 'auto' || Array.isArray(options.shards))) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'shards', "'auto', a number or array of numbers");
+    if (options.shards && !(options.shards === "auto" || Array.isArray(options.shards))) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "shards", "'auto', a number or array of numbers");
     }
-    if (options.shards && !options.shards.length) throw new RangeError('CLIENT_INVALID_PROVIDED_SHARDS');
-    if (typeof options.messageCacheMaxSize !== 'number' || isNaN(options.messageCacheMaxSize)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'messageCacheMaxSize', 'a number');
+    if (options.shards && !options.shards.length) throw new RangeError("CLIENT_INVALID_PROVIDED_SHARDS");
+    if (typeof options.messageCacheMaxSize !== "number" || isNaN(options.messageCacheMaxSize)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "messageCacheMaxSize", "a number");
     }
-    if (typeof options.messageCacheLifetime !== 'number' || isNaN(options.messageCacheLifetime)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'The messageCacheLifetime', 'a number');
+    if (typeof options.messageCacheLifetime !== "number" || isNaN(options.messageCacheLifetime)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "The messageCacheLifetime", "a number");
     }
-    if (typeof options.messageSweepInterval !== 'number' || isNaN(options.messageSweepInterval)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'messageSweepInterval', 'a number');
+    if (typeof options.messageSweepInterval !== "number" || isNaN(options.messageSweepInterval)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "messageSweepInterval", "a number");
     }
-    if (typeof options.invalidRequestWarningInterval !== 'number' || isNaN(options.invalidRequestWarningInterval)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'invalidRequestWarningInterval', 'a number');
+    if (typeof options.invalidRequestWarningInterval !== "number" || isNaN(options.invalidRequestWarningInterval)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "invalidRequestWarningInterval", "a number");
     }
     if (!Array.isArray(options.partials)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'partials', 'an Array');
+      throw new TypeError("CLIENT_INVALID_OPTION", "partials", "an Array");
     }
-    if (typeof options.restWsBridgeTimeout !== 'number' || isNaN(options.restWsBridgeTimeout)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'restWsBridgeTimeout', 'a number');
+    if (typeof options.restWsBridgeTimeout !== "number" || isNaN(options.restWsBridgeTimeout)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "restWsBridgeTimeout", "a number");
     }
-    if (typeof options.restRequestTimeout !== 'number' || isNaN(options.restRequestTimeout)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'restRequestTimeout', 'a number');
+    if (typeof options.restRequestTimeout !== "number" || isNaN(options.restRequestTimeout)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "restRequestTimeout", "a number");
     }
-    if (typeof options.restGlobalRateLimit !== 'number' || isNaN(options.restGlobalRateLimit)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'restGlobalRateLimit', 'a number');
+    if (typeof options.restGlobalRateLimit !== "number" || isNaN(options.restGlobalRateLimit)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "restGlobalRateLimit", "a number");
     }
-    if (typeof options.restSweepInterval !== 'number' || isNaN(options.restSweepInterval)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'restSweepInterval', 'a number');
+    if (typeof options.restSweepInterval !== "number" || isNaN(options.restSweepInterval)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "restSweepInterval", "a number");
     }
-    if (typeof options.retryLimit !== 'number' || isNaN(options.retryLimit)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'retryLimit', 'a number');
+    if (typeof options.retryLimit !== "number" || isNaN(options.retryLimit)) {
+      throw new TypeError("CLIENT_INVALID_OPTION", "retryLimit", "a number");
     }
   }
 }

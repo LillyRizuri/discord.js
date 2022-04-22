@@ -1,23 +1,23 @@
-'use strict';
+"use strict";
 
-const APIMessage = require('./APIMessage');
-const Base = require('./Base');
-const BaseMessageComponent = require('./BaseMessageComponent');
-const ClientApplication = require('./ClientApplication');
-const MessageAttachment = require('./MessageAttachment');
-const MessageComponentInteractionCollector = require('./MessageComponentInteractionCollector');
-const Embed = require('./MessageEmbed');
-const Mentions = require('./MessageMentions');
-const ReactionCollector = require('./ReactionCollector');
-const Sticker = require('./Sticker');
-const { Error } = require('../errors');
-const ReactionManager = require('../managers/ReactionManager');
-const Collection = require('../util/Collection');
-const { InteractionTypes, MessageTypes, SystemMessageTypes } = require('../util/Constants');
-const MessageFlags = require('../util/MessageFlags');
-const Permissions = require('../util/Permissions');
-const SnowflakeUtil = require('../util/SnowflakeUtil');
-const Util = require('../util/Util');
+const APIMessage = require("./APIMessage");
+const Base = require("./Base");
+const BaseMessageComponent = require("./BaseMessageComponent");
+const ClientApplication = require("./ClientApplication");
+const MessageAttachment = require("./MessageAttachment");
+const MessageComponentInteractionCollector = require("./MessageComponentInteractionCollector");
+const Embed = require("./MessageEmbed");
+const Mentions = require("./MessageMentions");
+const ReactionCollector = require("./ReactionCollector");
+const Sticker = require("./Sticker");
+const { Error } = require("../errors");
+const ReactionManager = require("../managers/ReactionManager");
+const Collection = require("../util/Collection");
+const { InteractionTypes, MessageTypes, SystemMessageTypes } = require("../util/Constants");
+const MessageFlags = require("../util/MessageFlags");
+const Permissions = require("../util/Permissions");
+const SnowflakeUtil = require("../util/SnowflakeUtil");
+const Util = require("../util/Util");
 
 /**
  * Represents a message on Discord.
@@ -55,7 +55,7 @@ class Message extends Base {
 		 */
 		this.id = data.id;
 
-		if ('type' in data) {
+		if ("type" in data) {
 			/**
 			 * The type of the message
 			 * @type {?MessageType}
@@ -67,22 +67,22 @@ class Message extends Base {
 			 * @type {?boolean}
 			 */
 			this.system = SystemMessageTypes.includes(this.type);
-		} else if (typeof this.type !== 'string') {
+		} else if (typeof this.type !== "string") {
 			this.system = null;
 			this.type = null;
 		}
 
-		if ('content' in data) {
+		if ("content" in data) {
 			/**
 			 * The content of the message
 			 * @type {?string}
 			 */
 			this.content = data.content;
-		} else if (typeof this.content !== 'string') {
+		} else if (typeof this.content !== "string") {
 			this.content = null;
 		}
 
-		if ('author' in data) {
+		if ("author" in data) {
 			/**
 			 * The author of the message
 			 * @type {?User}
@@ -92,23 +92,23 @@ class Message extends Base {
 			this.author = null;
 		}
 
-		if ('pinned' in data) {
+		if ("pinned" in data) {
 			/**
 			 * Whether or not this message is pinned
 			 * @type {?boolean}
 			 */
 			this.pinned = Boolean(data.pinned);
-		} else if (typeof this.pinned !== 'boolean') {
+		} else if (typeof this.pinned !== "boolean") {
 			this.pinned = null;
 		}
 
-		if ('tts' in data) {
+		if ("tts" in data) {
 			/**
 			 * Whether or not the message was Text-To-Speech
 			 * @type {?boolean}
 			 */
 			this.tts = data.tts;
-		} else if (typeof this.tts !== 'boolean') {
+		} else if (typeof this.tts !== "boolean") {
 			this.tts = null;
 		}
 
@@ -118,7 +118,7 @@ class Message extends Base {
 		 * lost if re-fetched</warn>
 		 * @type {?string}
 		 */
-		this.nonce = 'nonce' in data ? data.nonce : null;
+		this.nonce = "nonce" in data ? data.nonce : null;
 
 		/**
 		 * A list of embeds in the message - e.g. YouTube Player
@@ -166,7 +166,7 @@ class Message extends Base {
 		 * The timestamp the message was last edited at (if applicable)
 		 * @type {?number}
 		 */
-		this.editedTimestamp = 'edited_timestamp' in data ? new Date(data.edited_timestamp).getTime() : null;
+		this.editedTimestamp = "edited_timestamp" in data ? new Date(data.edited_timestamp).getTime() : null;
 
 		/**
 		 * A manager of the reactions belonging to this message
@@ -275,7 +275,7 @@ class Message extends Base {
 	 * @readonly
 	 */
 	get partial() {
-		return typeof this.content !== 'string' || !this.author;
+		return typeof this.content !== "string" || !this.author;
 	}
 
 	/**
@@ -287,16 +287,16 @@ class Message extends Base {
 	patch(data) {
 		const clone = this._clone();
 
-		if ('edited_timestamp' in data) this.editedTimestamp = new Date(data.edited_timestamp).getTime();
-		if ('content' in data) this.content = data.content;
-		if ('pinned' in data) this.pinned = data.pinned;
-		if ('tts' in data) this.tts = data.tts;
-		if ('embeds' in data) this.embeds = data.embeds.map(e => new Embed(e, true));
+		if ("edited_timestamp" in data) this.editedTimestamp = new Date(data.edited_timestamp).getTime();
+		if ("content" in data) this.content = data.content;
+		if ("pinned" in data) this.pinned = data.pinned;
+		if ("tts" in data) this.tts = data.tts;
+		if ("embeds" in data) this.embeds = data.embeds.map(e => new Embed(e, true));
 		else this.embeds = this.embeds.slice();
-		if ('components' in data) this.components = data.components.map(c => BaseMessageComponent.create(c, this.client));
+		if ("components" in data) this.components = data.components.map(c => BaseMessageComponent.create(c, this.client));
 		else this.components = this.components.slice();
 
-		if ('attachments' in data) {
+		if ("attachments" in data) {
 			this.attachments = new Collection();
 			for (const attachment of data.attachments) {
 				this.attachments.set(attachment.id, new MessageAttachment(attachment.url, attachment.filename, attachment));
@@ -307,13 +307,13 @@ class Message extends Base {
 
 		this.mentions = new Mentions(
 			this,
-			'mentions' in data ? data.mentions : this.mentions.users,
-			'mention_roles' in data ? data.mention_roles : this.mentions.roles,
-			'mention_everyone' in data ? data.mention_everyone : this.mentions.everyone,
-			'mention_channels' in data ? data.mention_channels : this.mentions.crosspostedChannels,
+			"mentions" in data ? data.mentions : this.mentions.users,
+			"mention_roles" in data ? data.mention_roles : this.mentions.roles,
+			"mention_everyone" in data ? data.mention_everyone : this.mentions.everyone,
+			"mention_channels" in data ? data.mention_channels : this.mentions.crosspostedChannels,
 		);
 
-		this.flags = new MessageFlags('flags' in data ? data.flags : 0).freeze();
+		this.flags = new MessageFlags("flags" in data ? data.flags : 0).freeze();
 
 		return clone;
 	}
@@ -361,7 +361,7 @@ class Message extends Base {
 	 * @readonly
 	 */
 	get url() {
-		return `https://discord.com/channels/${this.guild ? this.guild.id : '@me'}/${this.channel.id}/${this.id}`;
+		return `https://discord.com/channels/${this.guild ? this.guild.id : "@me"}/${this.channel.id}/${this.id}`;
 	}
 
 	/**
@@ -413,7 +413,7 @@ class Message extends Base {
 	awaitReactions(filter, options = {}) {
 		return new Promise((resolve, reject) => {
 			const collector = this.createReactionCollector(filter, options);
-			collector.once('end', (reactions, reason) => {
+			collector.once("end", (reactions, reason) => {
 				if (options.errors && options.errors.includes(reason)) reject(reactions);
 				else resolve(reactions);
 			});
@@ -458,7 +458,7 @@ class Message extends Base {
 	awaitMessageComponentInteractions(filter, options = {}) {
 		return new Promise((resolve, reject) => {
 			const collector = this.createMessageComponentInteractionCollector(filter, options);
-			collector.once('end', (interactions, reason) => {
+			collector.once("end", (interactions, reason) => {
 				if (options.errors && options.errors.includes(reason)) reject(interactions);
 				else resolve(interactions);
 			});
@@ -494,7 +494,7 @@ class Message extends Base {
 	 */
 	get pinnable() {
 		return (
-			this.type === 'DEFAULT' &&
+			this.type === "DEFAULT" &&
 			(!this.guild || this.channel.permissionsFor(this.client.user).has(Permissions.FLAGS.MANAGE_MESSAGES, false))
 		);
 	}
@@ -504,10 +504,10 @@ class Message extends Base {
 	 * @returns {Promise<Message>}
 	 */
 	async fetchReference() {
-		if (!this.reference) throw new Error('MESSAGE_REFERENCE_MISSING');
+		if (!this.reference) throw new Error("MESSAGE_REFERENCE_MISSING");
 		const { channelID, messageID } = this.reference;
 		const channel = this.client.channels.resolve(channelID);
-		if (!channel) throw new Error('GUILD_CHANNEL_RESOLVE');
+		if (!channel) throw new Error("GUILD_CHANNEL_RESOLVE");
 		const message = await channel.messages.fetch(messageID);
 		return message;
 	}
@@ -519,9 +519,9 @@ class Message extends Base {
 	 */
 	get crosspostable() {
 		return (
-			this.channel.type === 'news' &&
+			this.channel.type === "news" &&
 			!this.flags.has(MessageFlags.FLAGS.CROSSPOSTED) &&
-			this.type === 'DEFAULT' &&
+			this.type === "DEFAULT" &&
 			this.channel.viewable &&
 			this.channel.permissionsFor(this.client.user).has(Permissions.FLAGS.SEND_MESSAGES) &&
 			(this.author.id === this.client.user.id ||
@@ -686,7 +686,7 @@ class Message extends Base {
 	 * @returns {Promise<?Webhook>}
 	 */
 	fetchWebhook() {
-		if (!this.webhookID) return Promise.reject(new Error('WEBHOOK_MESSAGE'));
+		if (!this.webhookID) return Promise.reject(new Error("WEBHOOK_MESSAGE"));
 		return this.client.fetchWebhook(this.webhookID);
 	}
 
@@ -776,10 +776,10 @@ class Message extends Base {
 
 	toJSON() {
 		return super.toJSON({
-			channel: 'channelID',
-			author: 'authorID',
-			application: 'applicationID',
-			guild: 'guildID',
+			channel: "channelID",
+			author: "authorID",
+			application: "applicationID",
+			guild: "guildID",
 			cleanContent: true,
 			member: false,
 			reactions: false,

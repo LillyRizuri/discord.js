@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const APIMessage = require('./APIMessage');
-const Channel = require('./Channel');
-const { WebhookTypes } = require('../util/Constants');
-const DataResolver = require('../util/DataResolver');
-const SnowflakeUtil = require('../util/SnowflakeUtil');
+const APIMessage = require("./APIMessage");
+const Channel = require("./Channel");
+const { WebhookTypes } = require("../util/Constants");
+const DataResolver = require("../util/DataResolver");
+const SnowflakeUtil = require("../util/SnowflakeUtil");
 
 /**
  * Represents a webhook.
@@ -17,7 +17,7 @@ class Webhook {
      * @type {Client}
      * @readonly
      */
-    Object.defineProperty(this, 'client', { value: client });
+    Object.defineProperty(this, "client", { value: client });
     if (data) this._patch(data);
   }
 
@@ -33,7 +33,7 @@ class Webhook {
      * @name Webhook#token
      * @type {?string}
      */
-    Object.defineProperty(this, 'token', { value: data.token || null, writable: true, configurable: true });
+    Object.defineProperty(this, "token", { value: data.token || null, writable: true, configurable: true });
 
     /**
      * The avatar for the webhook
@@ -199,7 +199,7 @@ class Webhook {
         auth: false,
         data: body,
       })
-      .then(data => data.toString() === 'ok');
+      .then(data => data.toString() === "ok");
   }
 
   /**
@@ -212,7 +212,7 @@ class Webhook {
    * @returns {Promise<Webhook>}
    */
   async edit({ name = this.name, avatar, channel }, reason) {
-    if (avatar && typeof avatar === 'string' && !avatar.startsWith('data:')) {
+    if (avatar && typeof avatar === "string" && !avatar.startsWith("data:")) {
       avatar = await DataResolver.resolveImage(avatar);
     }
     if (channel) channel = channel instanceof Channel ? channel.id : channel;
@@ -253,7 +253,7 @@ class Webhook {
     ).resolveFiles();
     const d = await this.client.api
       .webhooks(this.id, this.token)
-      .messages(typeof message === 'string' ? message : message.id)
+      .messages(typeof message === "string" ? message : message.id)
       .patch({ data, files });
 
     const messageManager = this.client.channels?.cache.get(d.channel_id)?.messages;
@@ -284,7 +284,7 @@ class Webhook {
   async deleteMessage(message) {
     await this.client.api
       .webhooks(this.id, this.token)
-      .messages(typeof message === 'string' ? message : message.id)
+      .messages(typeof message === "string" ? message : message.id)
       .delete();
   }
 
@@ -327,16 +327,16 @@ class Webhook {
 
   static applyToClass(structure, ignore = []) {
     for (const prop of [
-      'send',
-      'sendSlackMessage',
-      'fetchMessage',
-      'edit',
-      'editMessage',
-      'delete',
-      'deleteMessage',
-      'createdTimestamp',
-      'createdAt',
-      'url',
+      "send",
+      "sendSlackMessage",
+      "fetchMessage",
+      "edit",
+      "editMessage",
+      "delete",
+      "deleteMessage",
+      "createdTimestamp",
+      "createdAt",
+      "url",
     ]) {
       if (ignore.includes(prop)) continue;
       Object.defineProperty(structure.prototype, prop, Object.getOwnPropertyDescriptor(Webhook.prototype, prop));

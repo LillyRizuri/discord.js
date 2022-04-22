@@ -3,6 +3,7 @@
 const { InteractionResponseTypes } = require("../../util/Constants");
 const MessageFlags = require("../../util/MessageFlags");
 const APIMessage = require("../APIMessage");
+const Message = require("../Message");
 class InteractionResponses {
 	async defer({ ephemeral } = {}) {
 		if (this.deferred || this.replied) {
@@ -42,8 +43,10 @@ class InteractionResponses {
 		return await this.fetchReply();
 	}
 
-	fetchReply() {
-		return this.client.actions.MessageCreate.handle(this.webhook.fetchMessage("@original")).message;
+	async fetchReply() {
+		const data = await this.webhook.fetchMessage("@original");
+		console.log(data);
+		return new Message(this.client, data, this.client.channels.fetch(data.channelID));
 	}
 
 	editReply(content, options) {
