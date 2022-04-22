@@ -137,9 +137,10 @@ class CommandInteraction extends Interaction {
   fetchReply() {}
   editReply() {}
   deleteReply() {}
+  update() {}
   followUp() {}
 }
 
-InteractionResponses.applyToClass(CommandInteraction, ["deferUpdate", "update"]);
+InteractionResponses.applyToClass(CommandInteraction, ["deferUpdate"]);
 
 module.exports = CommandInteraction;
