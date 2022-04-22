@@ -39,7 +39,7 @@ class InteractionResponses {
 			files,
 		});
 		this.replied = true;
-		return this.client.actions.MessageCreate.handle(res).message;
+		return this.client.actions.MessageCreate.handle(res);
 	}
 
 	fetchReply() {
