@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const Action = require('./Action');
-const { Events } = require('../../util/Constants');
+const Action = require("./Action");
+const { Events } = require("../../util/Constants");
 
 class WebhooksUpdate extends Action {
   handle(data) {
