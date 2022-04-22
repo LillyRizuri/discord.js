@@ -1,5 +1,5 @@
-'use strict';
-const BitField = require('./BitField');
+"use strict";
+const BitField = require("./BitField");
 
 /**
  * Data structure that makes it easy to calculate intents.
