@@ -195,5 +195,6 @@ class InteractionResponses {
     }
   }
 }
-
+ 
 module.exports = InteractionResponses;
+ 
