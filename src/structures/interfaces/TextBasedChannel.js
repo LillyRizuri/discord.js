@@ -1,12 +1,11 @@
-'use strict';
+"use strict";
 
-/* eslint-disable import/order */
-const MessageCollector = require('../MessageCollector');
-const APIMessage = require('../APIMessage');
-const SnowflakeUtil = require('../../util/SnowflakeUtil');
-const Collection = require('../../util/Collection');
-const { RangeError, TypeError } = require('../../errors');
-const MessageComponentInteractionCollector = require('../MessageComponentInteractionCollector');
+const MessageCollector = require("../MessageCollector");
+const APIMessage = require("../APIMessage");
+const SnowflakeUtil = require("../../util/SnowflakeUtil");
+const Collection = require("../../util/Collection");
+const { RangeError, TypeError } = require("../../errors");
+const MessageComponentInteractionCollector = require("../MessageComponentInteractionCollector");
 
 /**
  * Interface for classes that have text-channel-like features.
@@ -157,8 +156,8 @@ class TextBasedChannel {
    *   .catch(console.error);
    */
   async send(content, options) {
-    const User = require('../User');
-    const GuildMember = require('../GuildMember');
+    const User = require("../User");
+    const GuildMember = require("../GuildMember");
 
     if (this instanceof User || this instanceof GuildMember) {
       return this.createDM().then(dm => dm.send(content, options));
@@ -178,7 +177,10 @@ class TextBasedChannel {
     const { data, files } = await apiMessage.resolveFiles();
     return this.client.api.channels[this.id].messages
       .post({ data, files })
-      .then(d => this.client.actions.MessageCreate.handle(d).message);
+      .then(d => {
+		  console.log(d);
+		  return this.client.actions.MessageCreate.handle(d).message
+	  });
   }
 
   /**
@@ -193,7 +195,7 @@ class TextBasedChannel {
    * channel.startTyping(5);
    */
   startTyping(count) {
-    if (typeof count !== 'undefined' && count < 1) throw new RangeError('TYPING_COUNT');
+    if (typeof count !== "undefined" && count < 1) throw new RangeError("TYPING_COUNT");
     if (this.client.user._typing.has(this.id)) {
       const entry = this.client.user._typing.get(this.id);
       entry.count = count || entry.count + 1;
@@ -306,7 +308,7 @@ class TextBasedChannel {
   awaitMessages(filter, options = {}) {
     return new Promise((resolve, reject) => {
       const collector = this.createMessageCollector(filter, options);
-      collector.once('end', (collection, reason) => {
+      collector.once("end", (collection, reason) => {
         if (options.errors && options.errors.includes(reason)) {
           reject(collection);
         } else {
@@ -348,7 +350,7 @@ class TextBasedChannel {
   awaitMessageComponentInteractions(filter, options = {}) {
     return new Promise((resolve, reject) => {
       const collector = this.createMessageComponentInteractionCollector(filter, options);
-      collector.once('end', (interactions, reason) => {
+      collector.once("end", (interactions, reason) => {
         if (options.errors && options.errors.includes(reason)) reject(interactions);
         else resolve(interactions);
       });
@@ -384,7 +386,7 @@ class TextBasedChannel {
         );
         return message ? new Collection([[message.id, message]]) : new Collection();
       }
-      await this.client.api.channels[this.id].messages['bulk-delete'].post({ data: { messages: messageIDs } });
+      await this.client.api.channels[this.id].messages["bulk-delete"].post({ data: { messages: messageIDs } });
       return messageIDs.reduce(
         (col, id) =>
           col.set(
@@ -403,24 +405,24 @@ class TextBasedChannel {
       const msgs = await this.messages.fetch({ limit: messages });
       return this.bulkDelete(msgs, filterOld);
     }
-    throw new TypeError('MESSAGE_BULK_DELETE_TYPE');
+    throw new TypeError("MESSAGE_BULK_DELETE_TYPE");
   }
 
   static applyToClass(structure, full = false, ignore = []) {
-    const props = ['send'];
+    const props = ["send"];
     if (full) {
       props.push(
-        'lastMessage',
-        'lastPinAt',
-        'bulkDelete',
-        'startTyping',
-        'stopTyping',
-        'typing',
-        'typingCount',
-        'createMessageCollector',
-        'awaitMessages',
-        'createMessageComponentInteractionCollector',
-        'awaitMessageComponentInteractions',
+        "lastMessage",
+        "lastPinAt",
+        "bulkDelete",
+        "startTyping",
+        "stopTyping",
+        "typing",
+        "typingCount",
+        "createMessageCollector",
+        "awaitMessages",
+        "createMessageComponentInteractionCollector",
+        "awaitMessageComponentInteractions",
       );
     }
     for (const prop of props) {
@@ -437,4 +439,4 @@ class TextBasedChannel {
 module.exports = TextBasedChannel;
 
 // Fixes Circular
-const MessageManager = require('../../managers/MessageManager');
+const MessageManager = require("../../managers/MessageManager");
