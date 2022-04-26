@@ -98,6 +98,7 @@ class GuildMember extends Base {
 		}
 		if ('roles' in data) this._roles = data.roles;
 		this.pending = data.pending ?? false;
+		this.timeout = new Date(data.communication_disabled_until) ?? null;
 	}
 
 	_clone() {
