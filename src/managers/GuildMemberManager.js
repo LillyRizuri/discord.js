@@ -164,7 +164,7 @@ class GuildMemberManager extends BaseManager {
     if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
 
     // Clone the data object for immutability
-    const _data = { ...data, communication_disabled_until: (new Date(data.timeout)).toISOString() };
+    const _data = { ...data, communication_disabled_until: data.timeout !== null ? (new Date(data.timeout)).toISOString() : null };
     if (_data.channel) {
       _data.channel = this.guild.channels.resolve(_data.channel);
       if (!(_data.channel instanceof BaseGuildVoiceChannel)) {
