@@ -162,9 +162,8 @@ class GuildMemberManager extends BaseManager {
   async edit(user, data, reason) {
     const id = this.client.users.resolveID(user);
     if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
-
     // Clone the data object for immutability
-    const _data = { ...data, communication_disabled_until: data.timeout !== null ? (new Date(data.timeout)).toISOString() : null };
+    const _data = { ...data, communication_disabled_until: data.timeout !== void 0 ? (new Date(data.timeout)).toISOString() : null };
     if (_data.channel) {
       _data.channel = this.guild.channels.resolve(_data.channel);
       if (!(_data.channel instanceof BaseGuildVoiceChannel)) {
