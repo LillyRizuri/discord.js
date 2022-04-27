@@ -29,7 +29,7 @@ class GuildMemberRemoveAction extends Action {
 			}
 			guild.voiceStates.cache.delete(data.user.id);
 		}
-		return { guild, member };
+		return { guild, member: member ?? this.getUser(data.user) };
 	}
 }
 
