@@ -12,7 +12,7 @@ class GuildMemberRemoveAction extends Action {
 			member = this.getMember({ user: data.user }, guild);
 			if (member === void 0) {
 				try {
-					guild.members.fetch(data.user.id)
+					guild.members.fetch({ user: data.user.id, force: true });
 				} catch { }
 				member = this.getMember({ user: data.user }, guild);
 			}
