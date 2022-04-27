@@ -26,6 +26,10 @@ class GuildMemberRemoveAction extends Action {
 				 * @param {GuildMember} member The member that has left/been kicked from the guild
 				 */
 				if (shard.status === Status.READY) client.emit(Events.GUILD_MEMBER_REMOVE, member);
+			} else {
+				try {
+					client.emit(Events.GUILD_MEMBER_REMOVE, { ...this.getUser(data.user), user: this, guild })
+				} catch { }
 			}
 			guild.voiceStates.cache.delete(data.user.id);
 		}
